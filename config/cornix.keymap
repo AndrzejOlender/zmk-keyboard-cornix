@@ -15,10 +15,8 @@
 #define HM_TAPPING_TERM 250
 #define HM_TAPPING_REPEAT 210
 
-// quick tapping for shift
-
-#define HM_TAPPING_TERM_FAST 200
-#define HM_PRIOR_IDLE 70
+// https://github.com/manna-harbour/miryoku_zmk - miryoku_behaviors.dtsi/.h, miryoku.h:26
+#define U_TAPPING_TERM 200
 #define BASE 0
 #define WIN 1
 #define LOWER 2
@@ -27,17 +25,6 @@
 #define NAVI   5
 #define NUM    6
 #define DEBUG  7
-
-// https://github.com/urob/zmk-config/tree/main#timeless-homerow-mods
-
-#define KEYS_L LT0 LT1 LT2 LT3 LT4 LT5 LM0 LM1 LM2 LM3 LM4 LM5 LB0 LB1 LB2 LB3 LB4 LB5  // left hand
-#define KEYS_R RT0 RT1 RT2 RT3 RT4 RT5 RM0 RM1 RM2 RM3 RM4 RM5 RB0 RB1 RB2 RB3 RB4 RB5  // right hand
-#define THUMBS LH1 LH0 RH0 RH1
-// Ported keymap uses different physical positions for layer keys than stock
-// (mo 1/2/3 and lt 4 sit at flat positions 39/40/42/46 - see cornix54.h /
-// cornix.json for the position map), so the hold-trigger list is rewritten
-// to cover every thumb/palm position (38-49) instead of just 4 of them.
-#define KEYS_T 38 39 40 41 42 43 44 45 46 47 48 49
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 15
 
 #include <behaviors.dtsi>
@@ -48,65 +35,16 @@
 
 / {
     behaviors {
-        hm_l: homerow_mods_left {
+        // https://github.com/manna-harbour/miryoku_zmk - miryoku_behaviors.dtsi
+        // Non-positional: tap/hold resolved purely by tapping-term-ms, regardless
+        // of which other key is pressed meanwhile (no hold-trigger-key-positions).
+        u_mt: u_mt {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
             bindings = <&kp>, <&kp>;
 
-            flavor = "balanced";
-            tapping-term-ms = <HM_TAPPING_TERM>;
-            quick-tap-ms = <200>;                // repeat on tap-into-hold
-            require-prior-idle-ms = <HM_PRIOR_IDLE>;
-            hold-trigger-key-positions = <KEYS_R KEYS_T>;
-            hold-trigger-on-release;
-        };
-
-        hm_r: homerow_mods_right {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            bindings = <&kp>, <&kp>;
-
-            flavor = "balanced";
-            tapping-term-ms = <HM_TAPPING_TERM>;
-            quick-tap-ms = <200>;
-            require-prior-idle-ms = <HM_PRIOR_IDLE>;
-            hold-trigger-key-positions = <KEYS_L KEYS_T>;
-            hold-trigger-on-release;
-        };
-
-        // Positional Homerow mods for shift
-        // Use faster tapping term and disable some features that may
-        // cause false negatives.
-
-        hm_shift_l: hm_shift_l {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            bindings = <&kp>, <&kp>;
-
-            //flavor = "balanced";
-
-            flavor = "balanced";
-            tapping-term-ms = <HM_TAPPING_TERM_FAST>;
-            quick-tap-ms = <200>;
-            require-prior-idle-ms = <HM_PRIOR_IDLE>;
-            hold-trigger-key-positions = <KEYS_R KEYS_T>;
-            hold-trigger-on-release;
-        };
-
-        hm_shift_r: hm_shift_r {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            bindings = <&kp>, <&kp>;
-
-            flavor = "balanced";
-            tapping-term-ms = <HM_TAPPING_TERM_FAST>;
-            quick-tap-ms = <200>;
-            require-prior-idle-ms = <HM_PRIOR_IDLE>;
-            hold-trigger-key-positions = <KEYS_L KEYS_T>;
-
-            // for quick tapping; shift+~
-
-            hold-trigger-on-release;
+            flavor = "tap-preferred";
+            tapping-term-ms = <U_TAPPING_TERM>;
         };
 
         /*
@@ -153,7 +91,7 @@
             //   38-43 thumb/palm-L | 44-49 thumb/palm-R
             bindings = <
 &kp TAB    &kp Q          &kp W          &kp E          &kp R                  &kp T                            &kp Y      &kp U                &kp I          &kp O          &kp P            &kp BACKSPACE
-&kp LCTRL  &hm_l LGUI A   &hm_l LALT S   &hm_l LCTRL D  &hm_shift_l LSHFT F    &kp G                            &kp H      &hm_shift_r RSHFT J  &hm_r RCTRL K  &hm_r RALT L   &hm_r RGUI BSLH  &kp ENTER
+&kp LCTRL  &u_mt LGUI A   &u_mt LALT S   &u_mt LCTRL D  &u_mt LSHFT F          &kp G                            &kp H      &u_mt RSHFT J        &u_mt RCTRL K  &u_mt RALT L   &u_mt RGUI BSLH  &kp ENTER
 &kp LSHFT  &kp Z          &kp X          &kp C          &kp V                  &kp B          &kp C_MUTE  &mkp MB3  &kp N      &kp M                &kp COMMA      &kp DOT        &kp UP           &kp FSLH
 &kp LCTRL  &lt 4 LALT     &mo 1          &kp ESCAPE     &mo 3                  &kp SPACE                        &kp ENTER  &kp BACKSPACE        &mo 2          &kp LEFT       &kp DOWN         &kp RIGHT
             >;
