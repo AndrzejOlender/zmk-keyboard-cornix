@@ -33,7 +33,11 @@
 #define KEYS_L LT0 LT1 LT2 LT3 LT4 LT5 LM0 LM1 LM2 LM3 LM4 LM5 LB0 LB1 LB2 LB3 LB4 LB5  // left hand
 #define KEYS_R RT0 RT1 RT2 RT3 RT4 RT5 RM0 RM1 RM2 RM3 RM4 RM5 RB0 RB1 RB2 RB3 RB4 RB5  // right hand
 #define THUMBS LH1 LH0 RH0 RH1
-#define KEYS_T LH1 LH0 RH0 RH1
+// Ported keymap uses different physical positions for layer keys than stock
+// (mo 1/2/3 and lt 4 sit at flat positions 39/40/42/46 - see cornix54.h /
+// cornix.json for the position map), so the hold-trigger list is rewritten
+// to cover every thumb/palm position (38-49) instead of just 4 of them.
+#define KEYS_T 38 39 40 41 42 43 44 45 46 47 48 49
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 15
 
 #include <behaviors.dtsi>
@@ -43,8 +47,6 @@
 #include <dt-bindings/zmk/pointing.h>
 
 / {
-    // Activate ADJUST layer by pressing raise and lower
-
     behaviors {
         hm_l: homerow_mods_left {
             compatible = "zmk,behavior-hold-tap";
@@ -138,84 +140,35 @@
         };
     };
 
-    conditional_layers {
-        compatible = "zmk,conditional-layers";
-
-        adjust_layer {
-            if-layers = <3 2>;
-            then-layer = <4>;
-        };
-    };
-
-    combos {
-        compatible = "zmk,combos";
-
-        cb_ltm {
-            bindings = <&kp ESC>;
-            key-positions = <2 4>;
-            layers = <0 1>;
-        };
-
-        cb_lm {
-            bindings = <&kp TAB>;
-            key-positions = <14 16>;
-            layers = <0 1>;
-        };
-
-        cb_enter {
-            bindings = <&kp RET>;
-            key-positions = <21 19>;
-            layers = <0 1>;
-        };
-
-        layer3 {
-            bindings = <&kp N3>;
-            key-positions = <5 6>;
-        };
-
-        layer4 {
-            bindings = <&kp N4>;
-            key-positions = <5 6>;
-        };
-    };
-
     keymap {
         compatible = "zmk,keymap";
 
         default_layer {
             display-name = "Base";
 
-            // ------------------------------------------------------------------------------------------------------------
-            // |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |       |
-            // |  ESC  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   | BKSPC |
-            // |  TAB  |  A  |  S  |  D   |  F   |  G   |                   |  H   |  J    |  K    |  L   |   ;   |   '   |
-            // | SHIFT |  Z  |  X  |  C   |  V   |  B   |  MUTE  |  |       |  N   |  M    |  ,    |  .   |   /   | SHIFT |
-            //               | GUI | ALT  | CTRL | LOWER|  ENTER |  | SPACE | RAISE| CTRL  | ALT   | GUI  |
-
+            // Ported from keyboard.vil layer 0 (GACS home row mods + Nav layer-tap).
+            // Flat position map (see config/includes/cornix54.h + config/cornix.json):
+            //   0-5 top-L | 6-11 top-R | 12-17 home-L | 18-23 home-R
+            //   24-29 bottom-L | 30 LH3(gap) | 31 RH3(gap) | 32-37 bottom-R
+            //   38-43 thumb/palm-L | 44-49 thumb/palm-R
             bindings = <
-&kp TAB  &kp Q          &kp W         &kp E         &kp R                &kp T                      &kp Y      &kp U                &kp I            &kp O         &kp P             &kp BSLH
-&kp ESC  &hm_l LCTRL A  &hm_l LALT S  &hm_l LGUI D  &hm_shift_l LSHFT F  &kp G                      &kp H      &hm_shift_r RSHFT J  &hm_r RGUI K     &hm_r RALT L  &hm_r RCTRL SEMI  &kp SQT
-&mo 4    &hm_l LGUI Z   &kp X         &kp C         &kp V                &kp B        &none  &none  &kp N      &kp M                &kp COMMA        &kp DOT       &kp FSLH          &kp BACKSPACE
-&none    &none          &none         &lt 6 ESCAPE  &mo 2                &lt 5 SPACE                &kp ENTER  &mo 3                &lt 2 BACKSPACE  &none         &none             &none
+&kp TAB    &kp Q          &kp W          &kp E          &kp R                  &kp T                            &kp Y      &kp U                &kp I          &kp O          &kp P            &kp BACKSPACE
+&kp LCTRL  &hm_l LGUI A   &hm_l LALT S   &hm_l LCTRL D  &hm_shift_l LSHFT F    &kp G                            &kp H      &hm_shift_r RSHFT J  &hm_r RCTRL K  &hm_r RALT L   &hm_r RGUI BSLH  &kp ENTER
+&kp LSHFT  &kp Z          &kp X          &kp C          &kp V                  &kp B          &kp C_MUTE  &mkp MB3  &kp N      &kp M                &kp COMMA      &kp DOT        &kp UP           &kp FSLH
+&kp LCTRL  &lt 4 LALT     &mo 1          &kp ESCAPE     &mo 3                  &kp SPACE                        &kp ENTER  &kp BACKSPACE        &mo 2          &kp LEFT       &kp DOWN         &kp RIGHT
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
 
         win_layer {
-            display-name = "Windows";
+            display-name = "Numbers";
 
-            // ------------------------------------------------------------------------------------------------------------
-            // |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |       |
-            // |  ESC  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   | BKSPC |
-            // |  TAB  |  A  |  S  |  D   |  F   |  G   |                   |  H   |  J    |  K    |  L   |   ;   |   '   |
-            // | SHIFT |  Z  |  X  |  C   |  V   |  B   |  MUTE  |  |       |  N   |  M    |  ,    |  .   |   /   | SHIFT |
-            //               | GUI | ALT  | CTRL | LOWER|  ENTER |  | SPACE | RAISE| CTRL  | ALT   | GUI  |
-
+            // Ported from keyboard.vil layer 1 (MO(1), numbers + top punctuation).
             bindings = <
-&trans    &trans         &trans        &trans         &trans               &trans                  &trans  &trans               &trans         &trans        &trans            &trans
-&trans    &hm_l LCTRL A  &hm_l LALT S  &hm_l LCTRL D  &hm_shift_l LSHFT F  &trans                  &trans  &hm_shift_r RSHFT J  &hm_r RCTRL K  &hm_r RALT L  &hm_r RCTRL SEMI  &trans
-&kp LGUI  &trans         &trans        &trans         &trans               &trans  &trans  &trans  &trans  &trans               &trans         &trans        &trans            &trans
-&none     &none          &none         &trans         &trans               &trans                  &trans  &trans               &trans         &none         &none             &none
+&kp ESCAPE  &kp N1   &kp N2   &kp N3   &kp N4    &kp N5                    &kp N6     &kp N7   &kp N8   &kp N9   &kp N0   &kp DEL
+&kp TILDE   &trans   &trans   &trans   &kp SEMI  &kp MINUS                 &kp EQUAL  &kp SQT  &trans   &trans   &trans   &none
+&none       &none    &none    &none    &none     &none      &kp C_MUTE  &mkp MB3  &none      &none    &none    &none    &none    &none
+&none       &none    &none    &kp ESCAPE &none    &kp SPACE                 &kp ENTER  &none    &none    &none    &none    &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
@@ -223,58 +176,46 @@
         Symbol_layer {
             display-name = "Symbols";
 
-            // TODO: Some binds are waiting for shifted keycode support.
-            // -------------------------------
-            // |       |  F1 |  F2 |  F3  |  F4  |  F5  |                   |  F6  |  F7   |  F8   |  F9  |  F10  |  F11  |
-            // |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |  F12  |
-            // |       |  !  |  @  |  #   |  $   |  %   |                   |  ^   |  &    |  *    |  (   |   )   |   |   |
-            // |       |  =  |  -  |  +   |  {   |  }   |        |  |       |  [   |  ]    |  ;    |  :   |   \   |       |
-            //               |     |      |      |      |        |  |       |      |       |       |      |
-
+            // Ported from keyboard.vil layer 2 (MO(2), shifted-number symbols + brackets).
+            // USER00/USER01/USER02 (flat 12/24/38) left as &none pending answer on what they do.
             bindings = <
-&none  &kp EXCL  &kp AT    &kp HASH  &kp DLLR  &kp PRCNT                  &kp CARET  &kp AMPS      &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&none  &none     &kp LBKT  &kp RBKT  &kp LBRC  &kp RBRC                   &kp EQUAL  &kp UNDER     &kp MINUS  &kp PLUS   &kp DQT   &kp SQT
-&none  &none     &kp RBKT  &kp RPAR  &kp PIPE  &kp BSLH   &trans  &trans  &kp FSLH   &kp QUESTION  &kp GRAVE  &kp TILDE  &kp SQT   &none
-&none  &none     &none     &none     &trans    &trans                     &kp TILDE  &trans        &kp GRAVE  &none      &none     &none
+&none               &kp EXCL  &kp AT   &kp HASH  &kp DLLR  &kp PRCNT                 &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR  &kp RPAR  &kp PAGE_UP
+&none /* USER00 */   &trans    &trans   &trans    &trans    &none                     &kp PLUS   &kp DQT   &trans     &kp COLON &kp DQT   &kp PAGE_DOWN
+&none /* USER01 */   &none     &none    &none     &none     &none      &kp C_MUTE  &mkp MB3  &kp LBKT   &kp RBKT  &none      &none     &none     &none
+&none /* USER02 */   &none     &none    &none     &none     &kp SPACE                 &kp ENTER  &none     &none      &none     &none     &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
 
         Mix_layer {
-            display-name = "Mix";
+            display-name = "Numpad+BT";
 
-            // ------------------------------------------------------------------------------------------------------------
-            // | BTCLR | BT1  | BT2  |  BT3  |  BT4  |  BT5 |                |      |      |       |      |       |       |
-            // |       | INS  | PSCR | GUI   |       |      |                | PGUP |      |   ^   |      |       |       |
-            // |       | ALT  | CTRL | SHIFT |       | CAPS |                | PGDN |   <- |   v   |  ->  |  DEL  | BKSPC |
-            // |       | UNDO | CUT  | COPY  | PASTE |      |      |  |      |      |      |       |      |       |       |
-            //                |      |       |       |      |      |  |      |      |      |       |      |
-
+            // Ported from keyboard.vil layer 3 (MO(3), numpad + symbols).
+            // vil has no BT keys (came from a wired board); BT_CLR/BT_SEL added
+            // in the positions that were &none in the source, since a wireless
+            // board needs some way to switch/clear profiles without reflashing.
+            // 0xc1e-0xc21 (flat 1-4) and USER02 (flat 38) left as &none pending answer.
             bindings = <
-&trans  &kp F1  &kp F2  &kp F3   &kp F4  &kp F5                         &kp F6    &kp F7     &kp F8     &kp F9    &kp F10  &kp F11
-&trans  &kp N5  &kp N4  &kp N3   &kp N2  &kp N1                         &kp BSPC  &kp MINUS  &kp EQUAL  &kp PLUS  &kp DQT  &kp F12
-&trans  &kp N6  &kp N7  &kp N8   &kp N9  &kp N0         &trans  &trans  &kp TAB   &kp INS    &kp HOME   &kp END   &trans   &trans
-&none   &none   &none   &kp TAB  &trans  &kp BACKSPACE                  &trans    &trans     &kp N3     &none     &none    &none
+&kp ESCAPE           &none /* 0xc1e */  &none /* 0xc1f */  &none /* 0xc20 */  &none /* 0xc21 */  &none                       &kp CARET     &kp AMPS      &kp KP_MULTIPLY  &kp LPAR   &kp RPAR   &kp KP_DIVIDE
+&none /* USER00 */   &kp KP_N1          &kp KP_N2          &kp KP_N3          &kp KP_N4          &kp KP_N5                   &kp KP_MINUS  &kp KP_EQUAL  &kp GRAVE        &kp LBKT   &kp RBKT   &kp PIPE
+&none /* USER01 */   &kp KP_N6          &kp KP_N7          &kp KP_N8          &kp KP_N9          &kp KP_N0    &kp C_MUTE  &mkp MB3      &kp UNDER     &kp KP_PLUS      &kp TILDE  &kp LBRC   &kp RBRC   &none
+&none /* USER02 */   &bt BT_CLR         &bt BT_SEL 0       &kp ESCAPE         &bt BT_SEL 1       &kp SPACE                   &kp ENTER     &bt BT_SEL 2  &bt BT_SEL 3     &bt BT_SEL 4  &none   &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
 
         Adjust_layer {
-            display-name = "Adjust";
+            display-name = "Nav";
 
-            // ----------------------------------------------------------------------------------------------------------------------------
-            // | BTCLR  |  BT1    |  BT2    |   BT3   |   BT4   |   BT5   |                  |      |      |       |      |       |       |
-            // | moDEBUG| RGB_HUD | RGB_HUI | RGB_SAD | RGB_SAI | RGB_EFF |                  |      |      |       |      |       |       |
-            // | EXTPWR | RGB_BRD | RGB_BRI |         |         |         |                  |      |      |       |      |       |       |
-            // |        |         |         |         |         |         | RGB_TOG | |      |      |      |       |      |       |       |
-            //                    |         |         |         |         |         | |      |      |      |       |      |
-
+            // Ported from keyboard.vil layer 4 (LT(4,ALT), mostly-transparent Nav layer
+            // adding Home/End/PgUp/PgDn around the arrow keys that already live on Base).
             bindings = <
-&bt BT_CLR      &bt BT_SEL 0   &bt BT_SEL 1   &bt BT_SEL 2   &bt BT_SEL 3   &bt BT_SEL 4                   &none   &none  &none   &none  &none             &none
-&none           &bt BT_DISC 0  &bt BT_DISC 1  &bt BT_DISC 2  &bt BT_DISC 3  &bt BT_DISC 4                  &tog 1  &to 0  &none   &none  &none             &tog 1
-&bt BT_CLR_ALL  &none          &none          &none          &none          &none          &trans  &trans  &none   &none  &none   &none  &ext_power EP_ON  &kp CAPSLOCK
-&none           &none          &none          &none          &none          &none                          &none   &none  &kp N4  &none  &none             &none
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans      &kp PAGE_UP  &kp HOME  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans      &trans       &trans    &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans     &kp C_MUTE  &mkp MB3  &trans      &trans       &kp PAGE_DOWN &kp END &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans      &trans       &trans    &trans  &trans
             >;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
 
         Navi_layer {
@@ -299,14 +240,6 @@
 
         Debug_layer {
             display-name = "Debug";
-
-            // ----------------------------------------------------------------------------------------------------------------------------
-            // | BTCLR  |  BT1    |  BT2    |   BT3   |   BT4   |   BT5   |                  |      |      |       |      |       |       |
-            // | EXTPWR | BTCLR | RGB_HUI | RGB_SAD | RGB_SAI | RGB_EFF |                  |      |      |       |      |       |       |
-            // |        | RGB_BRD | RGB_BRI |         |         |         |                  |      |      |       |      |       |       |
-            // |        |         |         |         |         |         | RGB_TOG | |      |      |      |       |      |       |       |
-            //                    |         |         |         |         |         | |      |      |      |       |      |
-
             bindings = <
 &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4                  &none        &none  &none   &none  &none  &none
 &none       &none         &none         &none         &none         &none                         &none        &none  &none   &none  &none  &none
