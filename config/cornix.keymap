@@ -81,6 +81,17 @@
     keymap {
         compatible = "zmk,keymap";
 
+        // ---- ASCII legend for the per-layer diagrams below --------------------
+        // .        = &none (unused)     ...  = &trans (falls through to the layer below)
+        // X/g,a,c,s = home row mod-tap via u_mt: tap X, hold Gui/Alt/Ctrl/Shift
+        // NUM/SYM/BT/NAV = &mo or &lt into the layer of that display-name
+        // Dbg = &mo 7 (Debug)   BTn = &bt BT_SEL n   BOOT = &bootloader
+        // U00?/U01?/U02?/0x1e?-0x21? = USER00-02 / raw hex codes, meaning unknown
+        //   (ported as-is from keyboard.vil - see CLAUDE.md there)
+        // Diagrams read left-to-right as physically typed; the 2-cell gap in row 3
+        // is the encoder-click pair (MUTE, MB3) present on every layer.
+        // -------------------------------------------------------------------------
+
         default_layer {
             display-name = "Base";
 
@@ -89,6 +100,13 @@
             //   0-5 top-L | 6-11 top-R | 12-17 home-L | 18-23 home-R
             //   24-29 bottom-L | 30 LH3(gap) | 31 RH3(gap) | 32-37 bottom-R
             //   38-43 thumb/palm-L | 44-49 thumb/palm-R
+            //
+            // +---------------------------------------------------------------------------------------------------------------+
+            // |  TAB  |   Q   |   W   |   E   |   R   |   T   |       |       |   Y   |   U   |   I   |   O   |   P   |  BSPC |
+            // |  LCTL |  A/g  |  S/a  |  D/c  |  F/s  |   G   |       |       |   H   |  J/s  |  K/c  |  L/a  |  \/g  |  ENT  |
+            // |  LSFT |   Z   |   X   |   C   |   V   |   B   |  MUTE |  MB3  |   N   |   M   |   ,   |   .   |   UP  |   /   |
+            // |  LCTL |Alt/NAV|  NUM  |  ESC  |   BT  | SPACE |       |       |  ENT  |  BSPC |  SYM  |  LEFT |  DOWN |  RGHT |
+            // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
 &kp TAB    &kp Q          &kp W          &kp E          &kp R                  &kp T                            &kp Y      &kp U                &kp I          &kp O          &kp P            &kp BACKSPACE
 &kp LCTRL  &u_mt LGUI A   &u_mt LALT S   &u_mt LCTRL D  &u_mt LSHFT F          &kp G                            &kp H      &u_mt RSHFT J        &u_mt RCTRL K  &u_mt RALT L   &u_mt RGUI BSLH  &kp ENTER
@@ -102,6 +120,13 @@
             display-name = "Numbers";
 
             // Ported from keyboard.vil layer 1 (MO(1), numbers + top punctuation).
+            //
+            // +---------------------------------------------------------------------------------------------------------------+
+            // |  ESC  |   1   |   2   |   3   |   4   |   5   |       |       |   6   |   7   |   8   |   9   |   0   |  DEL  |
+            // |   ~   |  ...  |  ...  |  ...  |   ;   |   -   |       |       |   =   |   '   |  ...  |  ...  |  ...  |   .   |
+            // |   .   |   .   |   .   |   .   |   .   |   .   |  MUTE |  MB3  |   .   |   .   |   .   |   .   |   .   |   .   |
+            // |   .   |   .   |   .   |  ESC  |   .   | SPACE |       |       |  ENT  |   .   |   .   |   .   |   .   |   .   |
+            // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
 &kp ESCAPE  &kp N1   &kp N2   &kp N3   &kp N4    &kp N5                    &kp N6     &kp N7   &kp N8   &kp N9   &kp N0   &kp DEL
 &kp TILDE   &trans   &trans   &trans   &kp SEMI  &kp MINUS                 &kp EQUAL  &kp SQT  &trans   &trans   &trans   &none
@@ -116,6 +141,13 @@
 
             // Ported from keyboard.vil layer 2 (MO(2), shifted-number symbols + brackets).
             // USER00/USER01/USER02 (flat 12/24/38) left as &none pending answer on what they do.
+            //
+            // +---------------------------------------------------------------------------------------------------------------+
+            // |   .   |   !   |   @   |   #   |   $   |   %   |       |       |   ^   |   &   |   *   |   (   |   )   |  PgUp |
+            // |  U00? |  ...  |  ...  |  ...  |  ...  |   .   |       |       |   +   |   "   |  ...  |   :   |   "   |  PgDn |
+            // |  U01? |   .   |   .   |   .   |   .   |   .   |  MUTE |  MB3  |   [   |   ]   |   .   |   .   |   .   |   .   |
+            // |  U02? |   .   |   .   |   .   |   .   | SPACE |       |       |  ENT  |   .   |   .   |   .   |   .   |   .   |
+            // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none               &kp EXCL  &kp AT   &kp HASH  &kp DLLR  &kp PRCNT                 &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR  &kp RPAR  &kp PAGE_UP
 &none /* USER00 */   &trans    &trans   &trans    &trans    &none                     &kp PLUS   &kp DQT   &trans     &kp COLON &kp DQT   &kp PAGE_DOWN
@@ -133,6 +165,13 @@
             // in the positions that were &none in the source, since a wireless
             // board needs some way to switch/clear profiles without reflashing.
             // 0xc1e-0xc21 (flat 1-4) and USER02 (flat 38) left as &none pending answer.
+            //
+            // +---------------------------------------------------------------------------------------------------------------+
+            // |  ESC  | 0x1e? | 0x1f? | 0x20? | 0x21? |   .   |       |       |   ^   |   &   |  KP*  |   (   |   )   |  KP/  |
+            // |  U00? |  KP1  |  KP2  |  KP3  |  KP4  |  KP5  |       |       |  KP-  |  KP=  |   `   |   [   |   ]   |   |   |
+            // |  U01? |  KP6  |  KP7  |  KP8  |  KP9  |  KP0  |  MUTE |  MB3  |   _   |  KP+  |   ~   |   {   |   }   |   .   |
+            // |  U02? | BTclr |  BT0  |  ESC  |  BT1  | SPACE |       |       |  ENT  |  BT2  |  BT3  |  BT4  |   .   |   .   |
+            // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
 &kp ESCAPE           &none /* 0xc1e */  &none /* 0xc1f */  &none /* 0xc20 */  &none /* 0xc21 */  &none                       &kp CARET     &kp AMPS      &kp KP_MULTIPLY  &kp LPAR   &kp RPAR   &kp KP_DIVIDE
 &none /* USER00 */   &kp KP_N1          &kp KP_N2          &kp KP_N3          &kp KP_N4          &kp KP_N5                   &kp KP_MINUS  &kp KP_EQUAL  &kp GRAVE        &kp LBKT   &kp RBKT   &kp PIPE
@@ -147,6 +186,13 @@
 
             // Ported from keyboard.vil layer 4 (LT(4,ALT), mostly-transparent Nav layer
             // adding Home/End/PgUp/PgDn around the arrow keys that already live on Base).
+            //
+            // +---------------------------------------------------------------------------------------------------------------+
+            // |  ...  |  ...  |  ...  |  ...  |  ...  |  ...  |       |       |  ...  |  ...  |  PgUp |  Home |  ...  |  ...  |
+            // |  ...  |  ...  |  ...  |  ...  |  ...  |  ...  |       |       |  ...  |  ...  |  ...  |  ...  |  ...  |  ...  |
+            // |  ...  |  ...  |  ...  |  ...  |  ...  |  ...  |  MUTE |  MB3  |  ...  |  ...  |  PgDn |  End  |  ...  |  ...  |
+            // |  ...  |  ...  |  ...  |  ...  |  ...  |  ...  |       |       |  ...  |  ...  |  ...  |  ...  |  ...  |  ...  |
+            // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans      &kp PAGE_UP  &kp HOME  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans      &trans       &trans    &trans  &trans
@@ -158,6 +204,16 @@
 
         Navi_layer {
             display-name = "Navi";
+
+            // Stock layer, untouched by the keyboard.vil port - mouse movement/
+            // click/scroll despite the "Navi" name, plus arrow keys and mo 7 (Debug).
+            //
+            // +---------------------------------------------------------------------------------------------------------------+
+            // |   .   |   .   |   .   |  M-up |  PgUp |  PgDn |       |       | Clk-L | Clk-M | Clk-R | Scr-u | Scr-d |   .   |
+            // |   .   |   .   |  M-lt |  M-dn |  M-rt | Scr-u |       |       |  LEFT |  DOWN |   UP  |  RGHT |   .   |   .   |
+            // |   .   |   .   |   .   |   .   |   .   | Scr-d |  ...  |  ...  |  ...  |  ...  |   .   |   .   |   .   |   .   |
+            // |   .   |   .   |   .   |  Dbg  |  ...  |  ...  |       |       |   .   |   .   |   5   |   .   |   .   |   .   |
+            // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none  &none  &none           &mmv MOVE_UP    &kp PAGE_UP      &kp PAGE_DOWN                   &mkp MB1  &mkp MB3  &mkp MB2  &msc SCRL_UP  &msc SCRL_DOWN  &none
 &none  &none  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &msc SCRL_UP                    &kp LEFT  &kp DOWN  &kp UP    &kp RIGHT     &none           &none
@@ -168,6 +224,15 @@
 
         KeyPad_layer {
             display-name = "NumPad";
+
+            // Stock layer, untouched by the keyboard.vil port.
+            //
+            // +---------------------------------------------------------------------------------------------------------------+
+            // |  Dbg  |   .   |   .   |   .   |   .   |   .   |       |       |  KP7  |  KP8  |  KP9  |  KP-  |  KP*  |   .   |
+            // |   .   |   .   |   .   |   .   |   .   |   .   |       |       |  KP4  |  KP5  |  KP6  |  KP+  |  KP/  |   .   |
+            // |   .   |   .   |   .   |   .   |   .   |   .   |  ...  |  ...  |  KP1  |  KP2  |  KP3  |   .   |   .   |   .   |
+            // |   .   |   .   |   .   |   .   |   .   |  Dbg  |       |       |  KP0  |  KP.  |  KP0  |   .   |   .   |   .   |
+            // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
 &mo 7  &none  &none  &none  &none  &none                  &kp KP_N7        &kp KP_N8        &kp KP_N9        &kp KP_MINUS  &kp KP_MULTIPLY  &none
 &none  &none  &none  &none  &none  &none                  &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_N6        &kp KP_PLUS   &kp KP_DIVIDE    &none
@@ -178,6 +243,15 @@
 
         Debug_layer {
             display-name = "Debug";
+
+            // Stock layer, untouched by the keyboard.vil port.
+            //
+            // +---------------------------------------------------------------------------------------------------------------+
+            // | BTclr |  BT0  |  BT1  |  BT2  |  BT3  |  BT4  |       |       |   .   |   .   |   .   |   .   |   .   |   .   |
+            // |   .   |   .   |   .   |   .   |   .   |   .   |       |       |   .   |   .   |   .   |   .   |   .   |   .   |
+            // |   .   |   .   |   .   |   .   |   .   |  BOOT |  ...  |  ...  |  BOOT |   .   |   .   |   .   |   .   |   .   |
+            // |   .   |   .   |   .   |   .   |   .   |   .   |       |       |   .   |   .   |   7   |   .   |   .   |   .   |
+            // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
 &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4                  &none        &none  &none   &none  &none  &none
 &none       &none         &none         &none         &none         &none                         &none        &none  &none   &none  &none  &none
