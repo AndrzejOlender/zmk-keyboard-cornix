@@ -140,19 +140,21 @@
             display-name = "Symbols";
 
             // Ported from keyboard.vil layer 2 (MO(2), shifted-number symbols + brackets).
-            // USER00/USER01/USER02 (flat 12/24/38) left as &none pending answer on what they do.
+            // USER00/USER01/USER02 (flat 12/24/38, the Caps/Shift/Ctrl-labeled outer
+            // column) = hold this layer + tap = BT profile select, confirmed from the
+            // stock keycaps' green secondary legends (was "meaning unknown" in vil).
             //
             // +---------------------------------------------------------------------------------------------------------------+
             // |   .   |   !   |   @   |   #   |   $   |   %   |       |       |   ^   |   &   |   *   |   (   |   )   |  PgUp |
-            // |  U00? |  ...  |  ...  |  ...  |  ...  |   .   |       |       |   +   |   "   |  ...  |   :   |   "   |  PgDn |
-            // |  U01? |   .   |   .   |   .   |   .   |   .   |  MUTE |  MB3  |   [   |   ]   |   .   |   .   |   .   |   .   |
-            // |  U02? |   .   |   .   |   .   |   .   | SPACE |       |       |  ENT  |   .   |   .   |   .   |   .   |   .   |
+            // |  BT0  |  ...  |  ...  |  ...  |  ...  |   .   |       |       |   +   |   "   |  ...  |   :   |   "   |  PgDn |
+            // |  BT1  |   .   |   .   |   .   |   .   |   .   |  MUTE |  MB3  |   [   |   ]   |   .   |   .   |   .   |   .   |
+            // |  BT2  |   .   |   .   |   .   |   .   | SPACE |       |       |  ENT  |   .   |   .   |   .   |   .   |   .   |
             // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none               &kp EXCL  &kp AT   &kp HASH  &kp DLLR  &kp PRCNT                 &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR  &kp RPAR  &kp PAGE_UP
-&none /* USER00 */   &trans    &trans   &trans    &trans    &none                     &kp PLUS   &kp DQT   &trans     &kp COLON &kp DQT   &kp PAGE_DOWN
-&none /* USER01 */   &none     &none    &none     &none     &none      &kp C_MUTE  &mkp MB3  &kp LBKT   &kp RBKT  &none      &none     &none     &none
-&none /* USER02 */   &none     &none    &none     &none     &kp SPACE                 &kp ENTER  &none     &none      &none     &none     &none
+&bt BT_SEL 0         &trans    &trans   &trans    &trans    &none                     &kp PLUS   &kp DQT   &trans     &kp COLON &kp DQT   &kp PAGE_DOWN
+&bt BT_SEL 1         &none     &none    &none     &none     &none      &kp C_MUTE  &mkp MB3  &kp LBKT   &kp RBKT  &none      &none     &none     &none
+&bt BT_SEL 2         &none     &none    &none     &none     &kp SPACE                 &kp ENTER  &none     &none      &none     &none     &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
@@ -161,22 +163,25 @@
             display-name = "Numpad+BT";
 
             // Ported from keyboard.vil layer 3 (MO(3), numpad + symbols).
-            // vil has no BT keys (came from a wired board); BT_CLR/BT_SEL added
-            // in the positions that were &none in the source, since a wireless
-            // board needs some way to switch/clear profiles without reflashing.
-            // 0xc1e-0xc21 (flat 1-4) and USER02 (flat 38) left as &none pending answer.
+            // vil has no BT keys (came from a wired board); BT_CLR/extra BT_SEL 3/4
+            // added in the thumb row, since a wireless board needs some way to
+            // switch/clear profiles without reflashing.
+            // USER00/USER01/USER02 (flat 12/24/38) = the same BT profile select as
+            // on Symbol_layer (confirmed from stock keycaps) - kept here too since
+            // vil had them on both Raise and Numpad. 0xc1e-0xc21 (flat 1-4) still
+            // unknown, left as &none.
             //
             // +---------------------------------------------------------------------------------------------------------------+
             // |  ESC  | 0x1e? | 0x1f? | 0x20? | 0x21? |   .   |       |       |   ^   |   &   |  KP*  |   (   |   )   |  KP/  |
-            // |  U00? |  KP1  |  KP2  |  KP3  |  KP4  |  KP5  |       |       |  KP-  |  KP=  |   `   |   [   |   ]   |   |   |
-            // |  U01? |  KP6  |  KP7  |  KP8  |  KP9  |  KP0  |  MUTE |  MB3  |   _   |  KP+  |   ~   |   {   |   }   |   .   |
-            // |  U02? | BTclr |  BT0  |  ESC  |  BT1  | SPACE |       |       |  ENT  |  BT2  |  BT3  |  BT4  |   .   |   .   |
+            // |  BT0  |  KP1  |  KP2  |  KP3  |  KP4  |  KP5  |       |       |  KP-  |  KP=  |   `   |   [   |   ]   |   |   |
+            // |  BT1  |  KP6  |  KP7  |  KP8  |  KP9  |  KP0  |  MUTE |  MB3  |   _   |  KP+  |   ~   |   {   |   }   |   .   |
+            // |  BT2  | BTclr |  BT0  |  ESC  |  BT1  | SPACE |       |       |  ENT  |  BT2  |  BT3  |  BT4  |   .   |   .   |
             // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
 &kp ESCAPE           &none /* 0xc1e */  &none /* 0xc1f */  &none /* 0xc20 */  &none /* 0xc21 */  &none                       &kp CARET     &kp AMPS      &kp KP_MULTIPLY  &kp LPAR   &kp RPAR   &kp KP_DIVIDE
-&none /* USER00 */   &kp KP_N1          &kp KP_N2          &kp KP_N3          &kp KP_N4          &kp KP_N5                   &kp KP_MINUS  &kp KP_EQUAL  &kp GRAVE        &kp LBKT   &kp RBKT   &kp PIPE
-&none /* USER01 */   &kp KP_N6          &kp KP_N7          &kp KP_N8          &kp KP_N9          &kp KP_N0    &kp C_MUTE  &mkp MB3      &kp UNDER     &kp KP_PLUS      &kp TILDE  &kp LBRC   &kp RBRC   &none
-&none /* USER02 */   &bt BT_CLR         &bt BT_SEL 0       &kp ESCAPE         &bt BT_SEL 1       &kp SPACE                   &kp ENTER     &bt BT_SEL 2  &bt BT_SEL 3     &bt BT_SEL 4  &none   &none
+&bt BT_SEL 0         &kp KP_N1          &kp KP_N2          &kp KP_N3          &kp KP_N4          &kp KP_N5                   &kp KP_MINUS  &kp KP_EQUAL  &kp GRAVE        &kp LBKT   &kp RBKT   &kp PIPE
+&bt BT_SEL 1         &kp KP_N6          &kp KP_N7          &kp KP_N8          &kp KP_N9          &kp KP_N0    &kp C_MUTE  &mkp MB3      &kp UNDER     &kp KP_PLUS      &kp TILDE  &kp LBRC   &kp RBRC   &none
+&bt BT_SEL 2         &bt BT_CLR         &bt BT_SEL 0       &kp ESCAPE         &bt BT_SEL 1       &kp SPACE                   &kp ENTER     &bt BT_SEL 2  &bt BT_SEL 3     &bt BT_SEL 4  &none   &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
