@@ -81,32 +81,38 @@
     keymap {
         compatible = "zmk,keymap";
 
-        // ---- ASCII legend for the per-layer diagrams below --------------------
-        // .        = &none (unused)     ...  = &trans (falls through to the layer below)
-        // X/g,a,c,s = home row mod-tap via u_mt: tap X, hold Gui/Alt/Ctrl/Shift
-        // NUM/SYM/BT/NAV = &mo or &lt into the layer of that display-name
-        // Dbg = &mo 7 (Debug)   BTn = &bt BT_SEL n   BOOT = &bootloader
-        // U00?/U01?/U02?/0x1e?-0x21? = USER00-02 / raw hex codes, meaning unknown
-        //   (ported as-is from keyboard.vil - see CLAUDE.md there)
-        // Diagrams read left-to-right as physically typed; the 2-cell gap in row 3
-        // is the encoder-click pair (MUTE, MB3) present on every layer.
+        // ---- Reading the layer diagrams ---------------------------------------
+        // Every layer below carries an ASCII map of the board, laid out the way
+        // the keys actually sit under your hands. The two centre cells in the
+        // third row are the encoder-click keys; the blank centre gaps in the
+        // other rows are where no key exists.
+        //
+        //   .          unused (&none)
+        //   ...        transparent - falls through to the layer below (&trans)
+        //   X/Y        tap X, hold Y
+        //              home row mods: G = Gui, A = Alt, C = Ctrl, S = Shift
+        //   NUM SYM NPAD NAV MOUSE KPAD DBG    hold to reach that layer
+        //   BT0 - BT4  select Bluetooth profile       BTclr  clear profile
+        //   DskN       switch to macOS desktop N      BOOT   enter bootloader
+        //   MB1 - MB3  mouse buttons     Ms-*  move pointer     Scr-*  scroll
+        //
+        // The diagrams describe the bindings underneath them - change a binding
+        // and its diagram needs the same change.
         // -------------------------------------------------------------------------
 
         default_layer {
             display-name = "Base";
 
-            // Ported from keyboard.vil layer 0 (GACS home row mods + Nav layer-tap).
-            // Flat position map (see config/includes/cornix54.h + config/cornix.json):
-            //   0-5 top-L | 6-11 top-R | 12-17 home-L | 18-23 home-R
-            //   24-29 bottom-L | 30 LH3(gap) | 31 RH3(gap) | 32-37 bottom-R
-            //   38-43 thumb/palm-L | 44-49 thumb/palm-R
+            // QWERTY alphas with GACS home row mods - pinky to index, Gui Alt
+            // Ctrl Shift, mirrored on both hands. The left thumb reaches NUM and
+            // NPAD, the right thumb SYM, and the left Alt key doubles as NAV.
             //
-            // +---------------------------------------------------------------------------------------------------------------+
-            // |  TAB  |   Q   |   W   |   E   |   R   |   T   |       |       |   Y   |   U   |   I   |   O   |   P   |  BSPC |
-            // |  LCTL |  A/g  |  S/a  |  D/c  |  F/s  |   G   |       |       |   H   |  J/s  |  K/c  |  L/a  |  \/g  |  ENT  |
-            // |  LSFT |   Z   |   X   |   C   |   V   |   B   |  MUTE |  MB3  |   N   |   M   |   ,   |   .   |   UP  |   /   |
-            // |  LCTL |Alt/NAV|  NUM  |  ESC  |   BT  | SPACE |       |       |  ENT  |  BSPC |  SYM  |  LEFT |  DOWN |  RGHT |
-            // +---------------------------------------------------------------------------------------------------------------+
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
+            // |   TAB   |    Q    |    W    |    E    |    R    |    T    |         |         |    Y    |    U    |    I    |    O    |    P    |   BSPC  |
+            // |   LCTL  |   A/G   |   S/A   |   D/C   |   F/S   |    G    |         |         |    H    |   J/S   |   K/C   |   L/A   |   \/G   |   ENT   |
+            // |   LSFT  |    Z    |    X    |    C    |    V    |    B    |   MUTE  |   MB3   |    N    |    M    |    ,    |    .    |    UP   |    /    |
+            // |   LCTL  | Alt/NAV |   NUM   |   ESC   |   NPAD  |  SPACE  |         |         |   ENT   |   BSPC  |   SYM   |   LEFT  |   DOWN  |   RGHT  |
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &kp TAB    &kp Q          &kp W          &kp E          &kp R                  &kp T                            &kp Y      &kp U                &kp I          &kp O          &kp P            &kp BACKSPACE
 &kp LCTRL  &u_mt LGUI A   &u_mt LALT S   &u_mt LCTRL D  &u_mt LSHFT F          &kp G                            &kp H      &u_mt RSHFT J        &u_mt RCTRL K  &u_mt RALT L   &u_mt RGUI BSLH  &kp ENTER
@@ -119,14 +125,15 @@
         win_layer {
             display-name = "Numbers";
 
-            // Ported from keyboard.vil layer 1 (MO(1), numbers + top punctuation).
+            // The number row along the top, with the punctuation that pairs with
+            // it on the home row below. Home row mods stay transparent here.
             //
-            // +---------------------------------------------------------------------------------------------------------------+
-            // |  ESC  |   1   |   2   |   3   |   4   |   5   |       |       |   6   |   7   |   8   |   9   |   0   |  DEL  |
-            // |   ~   |  ...  |  ...  |  ...  |   ;   |   -   |       |       |   =   |   '   |  ...  |  ...  |  ...  |   .   |
-            // |   .   |   .   |   .   |   .   |   .   |   .   |  MUTE |  MB3  |   .   |   .   |   .   |   .   |   .   |   .   |
-            // |   .   |   .   |   .   |  ESC  |   .   | SPACE |       |       |  ENT  |   .   |   .   |   .   |   .   |   .   |
-            // +---------------------------------------------------------------------------------------------------------------+
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
+            // |   ESC   |    1    |    2    |    3    |    4    |    5    |         |         |    6    |    7    |    8    |    9    |    0    |   DEL   |
+            // |    ~    |   ...   |   ...   |   ...   |    ;    |    -    |         |         |    =    |    '    |   ...   |   ...   |   ...   |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |    .    |   MUTE  |   MB3   |    .    |    .    |    .    |    .    |    .    |    .    |
+            // |    .    |    .    |    .    |   ESC   |    .    |  SPACE  |         |         |   ENT   |    .    |    .    |    .    |    .    |    .    |
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &kp ESCAPE  &kp N1   &kp N2   &kp N3   &kp N4    &kp N5                    &kp N6     &kp N7   &kp N8   &kp N9   &kp N0   &kp DEL
 &kp TILDE   &trans   &trans   &trans   &kp SEMI  &kp MINUS                 &kp EQUAL  &kp SQT  &trans   &trans   &trans   &none
@@ -139,17 +146,16 @@
         Symbol_layer {
             display-name = "Symbols";
 
-            // Ported from keyboard.vil layer 2 (MO(2), shifted-number symbols + brackets).
-            // USER00/USER01/USER02 (flat 12/24/38, the Caps/Shift/Ctrl-labeled outer
-            // column) = hold this layer + tap = BT profile select, confirmed from the
-            // stock keycaps' green secondary legends (was "meaning unknown" in vil).
+            // The shifted number row plus brackets and quotes. The left outer
+            // column - the keys legended Caps/Shift/Ctrl - selects a Bluetooth
+            // profile, matching their green secondary legends.
             //
-            // +---------------------------------------------------------------------------------------------------------------+
-            // |   .   |   !   |   @   |   #   |   $   |   %   |       |       |   ^   |   &   |   *   |   (   |   )   |  PgUp |
-            // |  BT0  |  ...  |  ...  |  ...  |  ...  |   .   |       |       |   +   |   "   |  ...  |   :   |   "   |  PgDn |
-            // |  BT1  |   .   |   .   |   .   |   .   |   .   |  MUTE |  MB3  |   [   |   ]   |   .   |   .   |   .   |   .   |
-            // |  BT2  |   .   |   .   |   .   |   .   | SPACE |       |       |  ENT  |   .   |   .   |   .   |   .   |   .   |
-            // +---------------------------------------------------------------------------------------------------------------+
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
+            // |    .    |    !    |    @    |    #    |    $    |    %    |         |         |    ^    |    &    |    *    |    (    |    )    |   PgUp  |
+            // |   BT0   |   ...   |   ...   |   ...   |   ...   |    .    |         |         |    +    |    "    |   ...   |    :    |    "    |   PgDn  |
+            // |   BT1   |    .    |    .    |    .    |    .    |    .    |   MUTE  |   MB3   |    [    |    ]    |    .    |    .    |    .    |    .    |
+            // |   BT2   |    .    |    .    |    .    |    .    |  SPACE  |         |         |   ENT   |    .    |    .    |    .    |    .    |    .    |
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none               &kp EXCL  &kp AT   &kp HASH  &kp DLLR  &kp PRCNT                 &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR  &kp RPAR  &kp PAGE_UP
 &bt BT_SEL 0         &trans    &trans   &trans    &trans    &none                     &kp PLUS   &kp DQT   &trans     &kp COLON &kp DQT   &kp PAGE_DOWN
@@ -162,23 +168,17 @@
         Mix_layer {
             display-name = "Numpad+BT";
 
-            // Ported from keyboard.vil layer 3 (MO(3), numpad + symbols + desktops).
-            // Q/W/E/R here are the macOS virtual-desktop switches: vil stored them
-            // as raw hex 0xc1e-0xc21, which decode as QMK modified-keycodes
-            // (0x0800 LGUI | 0x0400 LALT | 0x1e..0x21 = KC_1..KC_4), i.e.
-            // Cmd+Opt+1..4 - matching the Mission Control shortcuts. Only four, and
-            // T (flat 5) is KC_NO in vil, so no fifth desktop.
-            // USER00/USER01/USER02 (flat 12/24/38) = BT profile select, same as on
-            // Symbol_layer; vil had them on both Raise and Numpad.
-            // Thumb row kept exactly as vil had it - no invented BT_CLR/BT_SEL 3/4
-            // (if a bond ever needs clearing, flash the cornix_reset artifact).
+            // Numpad under the left hand, symbols under the right. Q/W/E/R switch
+            // macOS desktops via Cmd+Opt+1..4, the Mission Control shortcuts -
+            // there are four desktops, so T is deliberately unused. The left outer
+            // column selects a Bluetooth profile, as on SYM.
             //
-            // +---------------------------------------------------------------------------------------------------------------+
-            // |  ESC  |  Dsk1 |  Dsk2 |  Dsk3 |  Dsk4 |   .   |       |       |   ^   |   &   |  KP*  |   (   |   )   |  KP/  |
-            // |  BT0  |  KP1  |  KP2  |  KP3  |  KP4  |  KP5  |       |       |  KP-  |  KP=  |   `   |   [   |   ]   |   |   |
-            // |  BT1  |  KP6  |  KP7  |  KP8  |  KP9  |  KP0  |  MUTE |  MB3  |   _   |  KP+  |   ~   |   {   |   }   |   .   |
-            // |  BT2  |   .   |   .   |  ESC  |   .   | SPACE |       |       |  ENT  |   .   |   .   |   .   |   .   |   .   |
-            // +---------------------------------------------------------------------------------------------------------------+
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
+            // |   ESC   |   Dsk1  |   Dsk2  |   Dsk3  |   Dsk4  |    .    |         |         |    ^    |    &    |   KP*   |    (    |    )    |   KP/   |
+            // |   BT0   |   KP1   |   KP2   |   KP3   |   KP4   |   KP5   |         |         |   KP-   |   KP=   |    `    |    [    |    ]    |    |    |
+            // |   BT1   |   KP6   |   KP7   |   KP8   |   KP9   |   KP0   |   MUTE  |   MB3   |    _    |   KP+   |    ~    |    {    |    }    |    .    |
+            // |   BT2   |    .    |    .    |   ESC   |    .    |  SPACE  |         |         |   ENT   |    .    |    .    |    .    |    .    |    .    |
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &kp ESCAPE           &kp LA(LG(N1))     &kp LA(LG(N2))     &kp LA(LG(N3))     &kp LA(LG(N4))     &none                       &kp CARET     &kp AMPS      &kp KP_MULTIPLY  &kp LPAR   &kp RPAR   &kp KP_DIVIDE
 &bt BT_SEL 0         &kp KP_N1          &kp KP_N2          &kp KP_N3          &kp KP_N4          &kp KP_N5                   &kp KP_MINUS  &kp KP_EQUAL  &kp GRAVE        &kp LBKT   &kp RBKT   &kp PIPE
@@ -191,15 +191,16 @@
         Adjust_layer {
             display-name = "Nav";
 
-            // Ported from keyboard.vil layer 4 (LT(4,ALT), mostly-transparent Nav layer
-            // adding Home/End/PgUp/PgDn around the arrow keys that already live on Base).
+            // Home/End/PgUp/PgDn in a block around the arrow keys, which stay on
+            // Base and remain reachable here. Everything else is transparent, so
+            // the other thumb layers still work while NAV is held.
             //
-            // +---------------------------------------------------------------------------------------------------------------+
-            // |  ...  |  ...  |  ...  |  ...  |  ...  |  ...  |       |       |  ...  |  ...  |  PgUp |  Home |  ...  |  ...  |
-            // |  ...  |  ...  |  ...  |  ...  |  ...  |  ...  |       |       |  ...  |  ...  |  ...  |  ...  |  ...  |  ...  |
-            // |  ...  |  ...  |  ...  |  ...  |  ...  |  ...  |  MUTE |  MB3  |  ...  |  ...  |  PgDn |  End  |  ...  |  ...  |
-            // |  ...  |  ...  |  ...  |  ...  |  ...  |  ...  |       |       |  ...  |  ...  |  ...  |  ...  |  ...  |  ...  |
-            // +---------------------------------------------------------------------------------------------------------------+
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
+            // |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |         |         |   ...   |   ...   |   PgUp  |   Home  |   ...   |   ...   |
+            // |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
+            // |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |   MUTE  |   MB3   |   ...   |   ...   |   PgDn  |   End   |   ...   |   ...   |
+            // |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans      &kp PAGE_UP  &kp HOME  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans      &trans       &trans    &trans  &trans
@@ -212,15 +213,18 @@
         Navi_layer {
             display-name = "Navi";
 
-            // Stock layer, untouched by the keyboard.vil port - mouse movement/
-            // click/scroll despite the "Navi" name, plus arrow keys and mo 7 (Debug).
+            // Pointer movement and scrolling on the left hand, mouse buttons and
+            // arrows on the right.
             //
-            // +---------------------------------------------------------------------------------------------------------------+
-            // |   .   |   .   |   .   |  M-up |  PgUp |  PgDn |       |       | Clk-L | Clk-M | Clk-R | Scr-u | Scr-d |   .   |
-            // |   .   |   .   |  M-lt |  M-dn |  M-rt | Scr-u |       |       |  LEFT |  DOWN |   UP  |  RGHT |   .   |   .   |
-            // |   .   |   .   |   .   |   .   |   .   | Scr-d |  ...  |  ...  |  ...  |  ...  |   .   |   .   |   .   |   .   |
-            // |   .   |   .   |   .   |  Dbg  |  ...  |  ...  |       |       |   .   |   .   |   5   |   .   |   .   |   .   |
-            // +---------------------------------------------------------------------------------------------------------------+
+            // No key on Base activates this layer, so it is currently dormant -
+            // assign it in ZMK Studio, or add a layer key here, to use it.
+            //
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
+            // |    .    |    .    |    .    |   Ms-u  |   PgUp  |   PgDn  |         |         |   MB1   |   MB3   |   MB2   |  Scr-u  |  Scr-d  |    .    |
+            // |    .    |    .    |   Ms-l  |   Ms-d  |   Ms-r  |  Scr-u  |         |         |   LEFT  |   DOWN  |    UP   |   RGHT  |    .    |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |  Scr-d  |   ...   |   ...   |   ...   |   ...   |    .    |    .    |    .    |    .    |
+            // |    .    |    .    |    .    |   DBG   |   ...   |   ...   |         |         |    .    |    .    |    5    |    .    |    .    |    .    |
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none  &none  &none           &mmv MOVE_UP    &kp PAGE_UP      &kp PAGE_DOWN                   &mkp MB1  &mkp MB3  &mkp MB2  &msc SCRL_UP  &msc SCRL_DOWN  &none
 &none  &none  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &msc SCRL_UP                    &kp LEFT  &kp DOWN  &kp UP    &kp RIGHT     &none           &none
@@ -232,14 +236,17 @@
         KeyPad_layer {
             display-name = "NumPad";
 
-            // Stock layer, untouched by the keyboard.vil port.
+            // A standalone numpad on the right hand, in calculator arrangement.
             //
-            // +---------------------------------------------------------------------------------------------------------------+
-            // |  Dbg  |   .   |   .   |   .   |   .   |   .   |       |       |  KP7  |  KP8  |  KP9  |  KP-  |  KP*  |   .   |
-            // |   .   |   .   |   .   |   .   |   .   |   .   |       |       |  KP4  |  KP5  |  KP6  |  KP+  |  KP/  |   .   |
-            // |   .   |   .   |   .   |   .   |   .   |   .   |  ...  |  ...  |  KP1  |  KP2  |  KP3  |   .   |   .   |   .   |
-            // |   .   |   .   |   .   |   .   |   .   |  Dbg  |       |       |  KP0  |  KP.  |  KP0  |   .   |   .   |   .   |
-            // +---------------------------------------------------------------------------------------------------------------+
+            // No key on Base activates this layer, so it is currently dormant -
+            // the numpad on NPAD is the one in daily use.
+            //
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
+            // |   DBG   |    .    |    .    |    .    |    .    |    .    |         |         |   KP7   |   KP8   |   KP9   |   KP-   |   KP*   |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |   KP4   |   KP5   |   KP6   |   KP+   |   KP/   |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |    .    |   ...   |   ...   |   KP1   |   KP2   |   KP3   |    .    |    .    |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |   DBG   |         |         |   KP0   |   KP.   |   KP0   |    .    |    .    |    .    |
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &mo 7  &none  &none  &none  &none  &none                  &kp KP_N7        &kp KP_N8        &kp KP_N9        &kp KP_MINUS  &kp KP_MULTIPLY  &none
 &none  &none  &none  &none  &none  &none                  &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_N6        &kp KP_PLUS   &kp KP_DIVIDE    &none
@@ -251,14 +258,19 @@
         Debug_layer {
             display-name = "Debug";
 
-            // Stock layer, untouched by the keyboard.vil port.
+            // Bluetooth profile management on the top row, and bootloader entry on
+            // both halves - the outer key of each hand's bottom row.
             //
-            // +---------------------------------------------------------------------------------------------------------------+
-            // | BTclr |  BT0  |  BT1  |  BT2  |  BT3  |  BT4  |       |       |   .   |   .   |   .   |   .   |   .   |   .   |
-            // |   .   |   .   |   .   |   .   |   .   |   .   |       |       |   .   |   .   |   .   |   .   |   .   |   .   |
-            // |   .   |   .   |   .   |   .   |   .   |  BOOT |  ...  |  ...  |  BOOT |   .   |   .   |   .   |   .   |   .   |
-            // |   .   |   .   |   .   |   .   |   .   |   .   |       |       |   .   |   .   |   7   |   .   |   .   |   .   |
-            // +---------------------------------------------------------------------------------------------------------------+
+            // Only MOUSE and KPAD activate this layer, and neither is reachable
+            // from Base, so it is dormant too. Double-tapping the physical reset
+            // button is the reliable way into the bootloader.
+            //
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
+            // |  BTclr  |   BT0   |   BT1   |   BT2   |   BT3   |   BT4   |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |   BOOT  |   ...   |   ...   |   BOOT  |    .    |    .    |    .    |    .    |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |    .    |    .    |    7    |    .    |    .    |    .    |
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4                  &none        &none  &none   &none  &none  &none
 &none       &none         &none         &none         &none         &none                         &none        &none  &none   &none  &none  &none
