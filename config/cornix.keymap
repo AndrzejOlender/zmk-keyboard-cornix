@@ -120,15 +120,21 @@
             display-name = "Numbers";
 
             // Ported from keyboard.vil layer 1 (MO(1), numbers + top punctuation).
+            // Q/W/E/R/T restored to stock macOS virtual-desktop switching
+            // (Opt+Cmd+1..5, confirmed from the Mission Control keyboard shortcuts
+            // settings) instead of the 1-5 that lived here in vil - that numbering
+            // was already a pre-ZMK drift from stock, not something this port
+            // introduced. Dsk5 (T) is an extrapolation of the 1-4 pattern actually
+            // seen in Settings; verify it once flashed.
             //
             // +---------------------------------------------------------------------------------------------------------------+
-            // |  ESC  |   1   |   2   |   3   |   4   |   5   |       |       |   6   |   7   |   8   |   9   |   0   |  DEL  |
+            // |  ESC  |  Dsk1 |  Dsk2 |  Dsk3 |  Dsk4 |  Dsk5 |       |       |   6   |   7   |   8   |   9   |   0   |  DEL  |
             // |   ~   |  ...  |  ...  |  ...  |   ;   |   -   |       |       |   =   |   '   |  ...  |  ...  |  ...  |   .   |
             // |   .   |   .   |   .   |   .   |   .   |   .   |  MUTE |  MB3  |   .   |   .   |   .   |   .   |   .   |   .   |
             // |   .   |   .   |   .   |  ESC  |   .   | SPACE |       |       |  ENT  |   .   |   .   |   .   |   .   |   .   |
             // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
-&kp ESCAPE  &kp N1   &kp N2   &kp N3   &kp N4    &kp N5                    &kp N6     &kp N7   &kp N8   &kp N9   &kp N0   &kp DEL
+&kp ESCAPE  &kp LA(LG(N1))  &kp LA(LG(N2))  &kp LA(LG(N3))  &kp LA(LG(N4))  &kp LA(LG(N5))                    &kp N6     &kp N7   &kp N8   &kp N9   &kp N0   &kp DEL
 &kp TILDE   &trans   &trans   &trans   &kp SEMI  &kp MINUS                 &kp EQUAL  &kp SQT  &trans   &trans   &trans   &none
 &none       &none    &none    &none    &none     &none      &kp C_MUTE  &mkp MB3  &none      &none    &none    &none    &none    &none
 &none       &none    &none    &kp ESCAPE &none    &kp SPACE                 &kp ENTER  &none    &none    &none    &none    &none
