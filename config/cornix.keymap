@@ -120,21 +120,15 @@
             display-name = "Numbers";
 
             // Ported from keyboard.vil layer 1 (MO(1), numbers + top punctuation).
-            // Q/W/E/R/T restored to stock macOS virtual-desktop switching
-            // (Opt+Cmd+1..5, confirmed from the Mission Control keyboard shortcuts
-            // settings) instead of the 1-5 that lived here in vil - that numbering
-            // was already a pre-ZMK drift from stock, not something this port
-            // introduced. Dsk5 (T) is an extrapolation of the 1-4 pattern actually
-            // seen in Settings; verify it once flashed.
             //
             // +---------------------------------------------------------------------------------------------------------------+
-            // |  ESC  |  Dsk1 |  Dsk2 |  Dsk3 |  Dsk4 |  Dsk5 |       |       |   6   |   7   |   8   |   9   |   0   |  DEL  |
+            // |  ESC  |   1   |   2   |   3   |   4   |   5   |       |       |   6   |   7   |   8   |   9   |   0   |  DEL  |
             // |   ~   |  ...  |  ...  |  ...  |   ;   |   -   |       |       |   =   |   '   |  ...  |  ...  |  ...  |   .   |
             // |   .   |   .   |   .   |   .   |   .   |   .   |  MUTE |  MB3  |   .   |   .   |   .   |   .   |   .   |   .   |
             // |   .   |   .   |   .   |  ESC  |   .   | SPACE |       |       |  ENT  |   .   |   .   |   .   |   .   |   .   |
             // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
-&kp ESCAPE  &kp LA(LG(N1))  &kp LA(LG(N2))  &kp LA(LG(N3))  &kp LA(LG(N4))  &kp LA(LG(N5))                    &kp N6     &kp N7   &kp N8   &kp N9   &kp N0   &kp DEL
+&kp ESCAPE  &kp N1   &kp N2   &kp N3   &kp N4    &kp N5                    &kp N6     &kp N7   &kp N8   &kp N9   &kp N0   &kp DEL
 &kp TILDE   &trans   &trans   &trans   &kp SEMI  &kp MINUS                 &kp EQUAL  &kp SQT  &trans   &trans   &trans   &none
 &none       &none    &none    &none    &none     &none      &kp C_MUTE  &mkp MB3  &none      &none    &none    &none    &none    &none
 &none       &none    &none    &kp ESCAPE &none    &kp SPACE                 &kp ENTER  &none    &none    &none    &none    &none
@@ -168,26 +162,28 @@
         Mix_layer {
             display-name = "Numpad+BT";
 
-            // Ported from keyboard.vil layer 3 (MO(3), numpad + symbols).
-            // vil has no BT keys (came from a wired board); BT_CLR/extra BT_SEL 3/4
-            // added in the thumb row, since a wireless board needs some way to
-            // switch/clear profiles without reflashing.
-            // USER00/USER01/USER02 (flat 12/24/38) = the same BT profile select as
-            // on Symbol_layer (confirmed from stock keycaps) - kept here too since
-            // vil had them on both Raise and Numpad. 0xc1e-0xc21 (flat 1-4) still
-            // unknown, left as &none.
+            // Ported from keyboard.vil layer 3 (MO(3), numpad + symbols + desktops).
+            // Q/W/E/R here are the macOS virtual-desktop switches: vil stored them
+            // as raw hex 0xc1e-0xc21, which decode as QMK modified-keycodes
+            // (0x0800 LGUI | 0x0400 LALT | 0x1e..0x21 = KC_1..KC_4), i.e.
+            // Cmd+Opt+1..4 - matching the Mission Control shortcuts. Only four, and
+            // T (flat 5) is KC_NO in vil, so no fifth desktop.
+            // USER00/USER01/USER02 (flat 12/24/38) = BT profile select, same as on
+            // Symbol_layer; vil had them on both Raise and Numpad.
+            // Thumb row kept exactly as vil had it - no invented BT_CLR/BT_SEL 3/4
+            // (if a bond ever needs clearing, flash the cornix_reset artifact).
             //
             // +---------------------------------------------------------------------------------------------------------------+
-            // |  ESC  | 0x1e? | 0x1f? | 0x20? | 0x21? |   .   |       |       |   ^   |   &   |  KP*  |   (   |   )   |  KP/  |
+            // |  ESC  |  Dsk1 |  Dsk2 |  Dsk3 |  Dsk4 |   .   |       |       |   ^   |   &   |  KP*  |   (   |   )   |  KP/  |
             // |  BT0  |  KP1  |  KP2  |  KP3  |  KP4  |  KP5  |       |       |  KP-  |  KP=  |   `   |   [   |   ]   |   |   |
             // |  BT1  |  KP6  |  KP7  |  KP8  |  KP9  |  KP0  |  MUTE |  MB3  |   _   |  KP+  |   ~   |   {   |   }   |   .   |
-            // |  BT2  | BTclr |  BT0  |  ESC  |  BT1  | SPACE |       |       |  ENT  |  BT2  |  BT3  |  BT4  |   .   |   .   |
+            // |  BT2  |   .   |   .   |  ESC  |   .   | SPACE |       |       |  ENT  |   .   |   .   |   .   |   .   |   .   |
             // +---------------------------------------------------------------------------------------------------------------+
             bindings = <
-&kp ESCAPE           &none /* 0xc1e */  &none /* 0xc1f */  &none /* 0xc20 */  &none /* 0xc21 */  &none                       &kp CARET     &kp AMPS      &kp KP_MULTIPLY  &kp LPAR   &kp RPAR   &kp KP_DIVIDE
+&kp ESCAPE           &kp LA(LG(N1))     &kp LA(LG(N2))     &kp LA(LG(N3))     &kp LA(LG(N4))     &none                       &kp CARET     &kp AMPS      &kp KP_MULTIPLY  &kp LPAR   &kp RPAR   &kp KP_DIVIDE
 &bt BT_SEL 0         &kp KP_N1          &kp KP_N2          &kp KP_N3          &kp KP_N4          &kp KP_N5                   &kp KP_MINUS  &kp KP_EQUAL  &kp GRAVE        &kp LBKT   &kp RBKT   &kp PIPE
 &bt BT_SEL 1         &kp KP_N6          &kp KP_N7          &kp KP_N8          &kp KP_N9          &kp KP_N0    &kp C_MUTE  &mkp MB3      &kp UNDER     &kp KP_PLUS      &kp TILDE  &kp LBRC   &kp RBRC   &none
-&bt BT_SEL 2         &bt BT_CLR         &bt BT_SEL 0       &kp ESCAPE         &bt BT_SEL 1       &kp SPACE                   &kp ENTER     &bt BT_SEL 2  &bt BT_SEL 3     &bt BT_SEL 4  &none   &none
+&bt BT_SEL 2         &none              &none              &kp ESCAPE         &none              &kp SPACE                   &kp ENTER     &none         &none            &none      &none      &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
