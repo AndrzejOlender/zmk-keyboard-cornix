@@ -104,20 +104,21 @@
             display-name = "Base";
 
             // QWERTY alphas with GACS home row mods - pinky to index, Gui Alt
-            // Ctrl Shift, mirrored on both hands. The left thumb reaches NUM and
-            // NPAD, the right thumb SYM, and the left Alt key doubles as NAV.
+            // Ctrl Shift, mirrored on both hands. The outer left column is
+            // unused. The left thumb reaches NUM and NPAD (tap = Tab, hold =
+            // NPAD), the right thumb SYM, and the left Alt key doubles as NAV.
             //
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
-            // |   TAB   |    Q    |    W    |    E    |    R    |    T    |         |         |    Y    |    U    |    I    |    O    |    P    |    .    |
+            // |    .    |    Q    |    W    |    E    |    R    |    T    |         |         |    Y    |    U    |    I    |    O    |    P    |    .    |
             // |    .    |   A/G   |   S/A   |   D/C   |   F/S   |    G    |         |         |    H    |   J/S   |   K/C   |   L/A   |   \/G   |    .    |
             // |    .    |    Z    |    X    |    C    |    V    |    B    |   MUTE  |   MB3   |    N    |    M    |    ,    |    .    |    UP   |    /    |
-            // |    .    | Alt/NAV |   NUM   |   ESC   |   NPAD  |  SPACE  |         |         |   ENT   |   BSPC  |   SYM   |   LEFT  |   DOWN  |   RGHT  |
+            // |    .    | Alt/NAV |   NUM   |   ESC   | Tab/NPAD|  SPACE  |         |         |   ENT   |   BSPC  |   SYM   |   LEFT  |   DOWN  |   RGHT  |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
-&kp TAB    &kp Q          &kp W          &kp E          &kp R                  &kp T                            &kp Y      &kp U                &kp I          &kp O          &kp P            &none
+&none      &kp Q          &kp W          &kp E          &kp R                  &kp T                            &kp Y      &kp U                &kp I          &kp O          &kp P            &none
 &none      &u_mt LGUI A   &u_mt LALT S   &u_mt LCTRL D  &u_mt LSHFT F          &kp G                            &kp H      &u_mt RSHFT J        &u_mt RCTRL K  &u_mt RALT L   &u_mt RGUI BSLH  &none
 &none      &kp Z          &kp X          &kp C          &kp V                  &kp B          &kp C_MUTE  &mkp MB3  &kp N      &kp M                &kp COMMA      &kp DOT        &kp UP           &kp FSLH
-&none      &lt 4 LALT     &mo 1          &kp ESCAPE     &mo 3                  &kp SPACE                        &kp ENTER  &kp BACKSPACE        &mo 2          &kp LEFT       &kp DOWN         &kp RIGHT
+&none      &lt 4 LALT     &mo 1          &kp ESCAPE     &lt 3 TAB              &kp SPACE                        &kp ENTER  &kp BACKSPACE        &mo 2          &kp LEFT       &kp DOWN         &kp RIGHT
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
