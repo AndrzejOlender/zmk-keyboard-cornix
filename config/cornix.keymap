@@ -24,6 +24,7 @@
 #define NAVI   4
 #define MEDIA  5
 #define DEBUG  6
+#define FUN    7
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 15
 
 #include <behaviors.dtsi>
@@ -103,7 +104,7 @@
         //   ...        transparent - falls through to the layer below (&trans)
         //   X/Y        tap X, hold Y
         //              home row mods: G = Gui, A = Alt, C = Ctrl, S = Shift
-        //   NUM SYM NPAD MOUSE MEDIA DBG        hold to reach that layer
+        //   NUM SYM NPAD MOUSE MEDIA DBG FUN    hold to reach that layer
         //   BT0 - BT4  select Bluetooth profile       BTclr  clear profile
         //   DskN       switch to macOS desktop N      BOOT   enter bootloader
         //   MB1 - MB3  mouse buttons     Ms-*  move pointer     Scr-*  scroll
@@ -118,19 +119,19 @@
             // QWERTY alphas with GACS home row mods - pinky to index, Gui Alt
             // Ctrl Shift, mirrored on both hands. The outer left column is
             // unused. Left thumbs: Esc/Media, Tab/NPAD, Space/Mouse. Right
-            // thumbs: Ent/Sym and Bksp/Num (tap = key, hold = layer).
+            // thumbs: Ent/Sym, Bksp/Num, Del/Fun (tap = key, hold = layer).
             //
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             // |    .    |    Q    |    W    |    E    |    R    |    T    |         |         |    Y    |    U    |    I    |    O    |    P    |    .    |
             // |    .    |   A/G   |   S/A   |   D/C   |   F/S   |    G    |         |         |    H    |   J/S   |   K/C   |   L/A   |   '/G   |    .    |
             // |    .    |    Z    |    X    |    C    |    V    |    B    |   MUTE  |   MB3   |    N    |    M    |    ,    |    .    |    UP   |    /    |
-            // |    .    |    .    |    .    |Esc/Media| Tab/NPAD|Spc/Mouse|         |         | Ent/Sym | Bksp/Num|    .    |   LEFT  |   DOWN  |   RGHT  |
+            // |    .    |    .    |    .    |Esc/Media| Tab/NPAD|Spc/Mouse|         |         | Ent/Sym | Bksp/Num| Del/Fun |   LEFT  |   DOWN  |   RGHT  |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none      &kp Q          &kp W          &kp E          &kp R                  &kp T                            &kp Y      &kp U                &kp I          &kp O          &kp P            &none
 &none      &u_mt LGUI A   &u_mt LALT S   &u_mt LCTRL D  &u_mt LSHFT F          &kp G                            &kp H      &u_mt RSHFT J        &u_mt RCTRL K  &u_mt RALT L   &u_mt RGUI SQT  &none
 &none      &kp Z          &kp X          &kp C          &kp V                  &kp B          &kp C_MUTE  &mkp MB3  &kp N      &kp M                &kp COMMA      &kp DOT        &kp UP           &kp FSLH
-&none      &none          &none          &lt 5 ESCAPE   &lt 3 TAB              &tp_lt 4 SPACE                   &tp_lt 2 ENTER   &tp_lt 1 BACKSPACE  &none          &kp LEFT       &kp DOWN         &kp RIGHT
+&none      &none          &none          &lt 5 ESCAPE   &lt 3 TAB              &tp_lt 4 SPACE                   &tp_lt 2 ENTER   &tp_lt 1 BACKSPACE  &tp_lt 7 DEL   &kp LEFT       &kp DOWN         &kp RIGHT
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
@@ -271,6 +272,29 @@
 &none       &none         &none         &none         &none         &bootloader   &trans  &trans  &bootloader  &none  &none   &none  &none  &none
 &none       &none         &none         &none         &none         &none                         &none        &none  &none  &none  &none  &none
             >;
+        };
+
+        Fun_layer {
+            display-name = "Fun";
+
+            // F-keys in the Miryoku arrangement, plus PrtSc/ScrLk/Pause on
+            // the free slots and App/Tab/Space on the left thumbs. The right
+            // hand stays transparent, so the right home row mods still work.
+            // Activated by holding Delete on Base (tap = Del).
+            //
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
+            // |    .    |   F12   |    F7   |    F8   |    F9   |  PrtSc  |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
+            // |    .    |   F11   |    F4   |    F5   |    F6   |  ScrLk  |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
+            // |    .    |   F10   |    F1   |    F2   |    F3   |  Pause  |   MUTE  |   MB3   |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
+            // |    .    |    .    |    .    |   App   |   Tab   |  Space  |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
+            // +-------------------------------------------------------------------------------------------------------------------------------------------+
+            bindings = <
+&none  &kp F12  &kp F7   &kp F8   &kp F9   &kp PSCRN                    &none  &none  &none  &none  &none  &none
+&none  &kp F11  &kp F4   &kp F5   &kp F6   &kp SLCK                     &trans &trans &trans &trans &trans &trans
+&none  &kp F10  &kp F1   &kp F2   &kp F3   &kp PAUSE_BREAK  &kp C_MUTE  &mkp MB3  &trans &trans &trans &trans &trans &trans
+&none  &none    &none    &kp K_APP  &kp TAB  &kp SPACE                    &trans &trans &trans &trans &trans &trans
+            >;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
     };
 };
