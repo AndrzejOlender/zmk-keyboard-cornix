@@ -117,21 +117,20 @@
 
             // QWERTY alphas with GACS home row mods - pinky to index, Gui Alt
             // Ctrl Shift, mirrored on both hands. The outer left column is
-            // unused. The left thumb reaches NUM and NPAD (tap = Tab, hold =
-            // NPAD); Esc taps as Esc and holds Media; Space holds Mouse.
-            // The right thumb holds SYM.
+            // unused. Left thumbs: Esc/Media, Tab/NPAD, Space/Mouse. Right
+            // thumbs: Ent/Sym and Bksp/Num (tap = key, hold = layer).
             //
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             // |    .    |    Q    |    W    |    E    |    R    |    T    |         |         |    Y    |    U    |    I    |    O    |    P    |    .    |
-            // |    .    |   A/G   |   S/A   |   D/C   |   F/S   |    G    |         |         |    H    |   J/S   |   K/C   |   L/A   |   \/G   |    .    |
+            // |    .    |   A/G   |   S/A   |   D/C   |   F/S   |    G    |         |         |    H    |   J/S   |   K/C   |   L/A   |   '/G   |    .    |
             // |    .    |    Z    |    X    |    C    |    V    |    B    |   MUTE  |   MB3   |    N    |    M    |    ,    |    .    |    UP   |    /    |
-            // |    .    |    .    |   NUM   |Esc/Media| Tab/NPAD|Spc/Mouse|         |         |   ENT   |   BSPC  |   SYM   |   LEFT  |   DOWN  |   RGHT  |
+            // |    .    |    .    |    .    |Esc/Media| Tab/NPAD|Spc/Mouse|         |         | Ent/Sym | Bksp/Num|    .    |   LEFT  |   DOWN  |   RGHT  |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none      &kp Q          &kp W          &kp E          &kp R                  &kp T                            &kp Y      &kp U                &kp I          &kp O          &kp P            &none
-&none      &u_mt LGUI A   &u_mt LALT S   &u_mt LCTRL D  &u_mt LSHFT F          &kp G                            &kp H      &u_mt RSHFT J        &u_mt RCTRL K  &u_mt RALT L   &u_mt RGUI BSLH  &none
+&none      &u_mt LGUI A   &u_mt LALT S   &u_mt LCTRL D  &u_mt LSHFT F          &kp G                            &kp H      &u_mt RSHFT J        &u_mt RCTRL K  &u_mt RALT L   &u_mt RGUI SQT  &none
 &none      &kp Z          &kp X          &kp C          &kp V                  &kp B          &kp C_MUTE  &mkp MB3  &kp N      &kp M                &kp COMMA      &kp DOT        &kp UP           &kp FSLH
-&none      &none          &mo 1          &lt 5 ESCAPE   &lt 3 TAB              &tp_lt 4 SPACE                   &kp ENTER  &kp BACKSPACE        &mo 2          &kp LEFT       &kp DOWN         &kp RIGHT
+&none      &none          &none          &lt 5 ESCAPE   &lt 3 TAB              &tp_lt 4 SPACE                   &tp_lt 2 ENTER   &tp_lt 1 BACKSPACE  &none          &kp LEFT       &kp DOWN         &kp RIGHT
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
@@ -139,20 +138,22 @@
         win_layer {
             display-name = "Numbers";
 
-            // The number row along the top, with the punctuation that pairs with
-            // it on the home row below. Home row mods stay transparent here.
+            // Miryoku-style number layer: a numpad block under the left hand,
+            // with ` ; = \ on the free slots and Dot, Minus, 0 on the left
+            // thumb keys. The right hand stays transparent, so the right home
+            // row mods still work. Activated by holding Backspace (tap = Bksp).
             //
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
-            // |    .    |    1    |    2    |    3    |    4    |    5    |         |         |    6    |    7    |    8    |    9    |    0    |    .    |
-            // |    ~    |   ...   |   ...   |   ...   |    ;    |    -    |         |         |    =    |    '    |   ...   |   ...   |   ...   |    .    |
-            // |    .    |    .    |    .    |    .    |    .    |    .    |   MUTE  |   MB3   |    .    |    .    |    .    |    .    |    .    |    .    |
-            // |    .    |    .    |    .    |   ESC   |    .    |  SPACE  |         |         |   ENT   |    .    |    .    |    .    |    .    |    .    |
+            // |    .    |    [    |    7    |    8    |    9    |    ]    |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
+            // |    .    |    ;    |    4    |    5    |    6    |    =    |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
+            // |    .    |    `    |    1    |    2    |    3    |    \    |   MUTE  |   MB3   |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
+            // |    .    |    .    |    .    |   Dot   |    -    |    0    |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
-&none       &kp N1   &kp N2   &kp N3   &kp N4    &kp N5                    &kp N6     &kp N7   &kp N8   &kp N9   &kp N0   &none
-&kp TILDE   &trans   &trans   &trans   &kp SEMI  &kp MINUS                 &kp EQUAL  &kp SQT  &trans   &trans   &trans   &none
-&none       &none    &none    &none    &none     &none      &kp C_MUTE  &mkp MB3  &none      &none    &none    &none    &none    &none
-&none       &none    &none    &kp ESCAPE &none    &kp SPACE                 &kp ENTER  &none    &none    &none    &none    &none
+&none  &kp LBKT   &kp N7   &kp N8   &kp N9   &kp RBKT                      &none  &none  &none  &none  &none  &none
+&kp SEMI    &kp N4   &kp N5   &kp N6   &kp EQUAL &none                       &trans &trans &trans &trans &trans &trans
+&kp GRAVE   &kp N1   &kp N2   &kp N3   &kp BSLH  &none      &kp C_MUTE  &mkp MB3  &trans &trans &trans &trans &trans &trans
+&none       &none    &none    &kp DOT  &kp MINUS &kp N0                       &trans &trans &trans &trans &trans &trans
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
@@ -160,21 +161,23 @@
         Symbol_layer {
             display-name = "Symbols";
 
-            // The shifted number row plus brackets and quotes. The left outer
-            // column - the keys legended Caps/Shift/Ctrl - selects a Bluetooth
-            // profile, matching their green secondary legends.
+            // Miryoku-style symbol layer - the same numpad geometry as
+            // Numbers, with the shifted symbols. The right hand stays
+            // transparent, so the right home row mods still work. Activated
+            // by holding Enter (tap = Enter). The left outer column keeps
+            // the BT profiles.
             //
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
-            // |    .    |    !    |    @    |    #    |    $    |    %    |         |         |    ^    |    &    |    *    |    (    |    )    |    .    |
-            // |   BT0   |   ...   |   ...   |   ...   |   ...   |    .    |         |         |    +    |    "    |   ...   |    :    |    .    |    .    |
-            // |   BT1   |    .    |    .    |    .    |    .    |    .    |   MUTE  |   MB3   |    [    |    ]    |    .    |    .    |    .    |    .    |
-            // |   BT2   |    .    |    .    |    .    |    .    |  SPACE  |         |         |   ENT   |    .    |    .    |    .    |    .    |    .    |
+            // |    .    |    {    |    &    |    *    |    (    |    }    |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
+            // |   BT0   |    :    |    $    |    %    |    ^    |    +    |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
+            // |   BT1   |    ~    |    !    |    @    |    #    |    |    |   MUTE  |   MB3   |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
+            // |   BT2   |    .    |    .    |    (    |    _    |    )    |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
-&none               &kp EXCL  &kp AT   &kp HASH  &kp DLLR  &kp PRCNT                 &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR  &kp RPAR  &none
-&bt BT_SEL 0         &trans    &trans   &trans    &trans    &none                     &kp PLUS   &kp DQT   &trans     &kp COLON &none      &none
-&bt BT_SEL 1         &none     &none    &none     &none     &none      &kp C_MUTE  &mkp MB3  &kp LBKT   &kp RBKT  &none      &none     &none     &none
-&bt BT_SEL 2         &none     &none    &none     &none     &kp SPACE                 &kp ENTER  &none     &none      &none     &none     &none
+&none        &kp LBRC   &kp AMPS   &kp ASTRK  &kp LPAR   &kp RBRC                      &none  &none  &none  &none  &none  &none
+&bt BT_SEL 0 &kp COLON  &kp DLLR   &kp PRCNT  &kp CARET  &kp PLUS                      &trans &trans &trans &trans &trans &trans
+&bt BT_SEL 1 &kp TILDE  &kp EXCL   &kp AT     &kp HASH   &kp PIPE   &kp C_MUTE  &mkp MB3  &trans &trans &trans &trans &trans &trans
+&bt BT_SEL 2 &none       &none      &kp LPAR   &kp UNDER  &kp RPAR                     &trans &trans &trans &trans &trans &trans
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
