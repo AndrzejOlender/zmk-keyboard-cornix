@@ -32,6 +32,7 @@
 #include <dt-bindings/zmk/ext_power.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
+#include <dt-bindings/zmk/outputs.h>
 
 / {
     behaviors {
@@ -206,23 +207,26 @@
         };
 
         Navi_layer {
-            display-name = "Navi";
+            display-name = "Mouse";
 
-            // Pointer movement and scrolling on the left hand, mouse buttons
-            // (left, right, middle) on the right-hand top row.
+            // Mouse in the Miryoku arrangement: cursor movement with
+            // auto-repeat on the right-hand home row, wheel on the bottom
+            // row, buttons on the right thumbs (right, left, middle) and
+            // clipboard on the top row. The left home row is plain mods
+            // for mod+click and drag; the outer thumb holds Debug.
             // Activated by holding Space on Base.
             //
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
-            // |    .    |    .    |    .    |   Ms-u  |    .    |    .    |         |         |   MB1   |   MB2   |   MB3   |  Scr-u  |  Scr-d  |    .    |
-            // |    .    |    .    |   Ms-l  |   Ms-d  |   Ms-r  |  Scr-u  |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
-            // |    .    |    .    |    .    |    .    |    .    |  Scr-d  |   ...   |   ...   |   ...   |   ...   |    .    |    .    |    .    |    .    |
-            // |    .    |    .    |    .    |   DBG   |   ...   |   ...   |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |   RDO   |   PST   |   CPY   |   CUT   |   UND   |    .    |
+            // |    .    |   Gui   |   Alt   |   Ctrl  |  Shift  |    .    |         |         |    .    |   Ms-l  |   Ms-d  |   Ms-u  |   Ms-r  |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |    .    |   ...   |   ...   |    .    |   Wh-l  |   Wh-d  |   Wh-u  |   Wh-r  |    .    |
+            // |    .    |    .    |    .    |   DBG   |    .    |    .    |         |         | R-click | L-click | M-click |    .    |    .    |    .    |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
-&none  &none  &none           &mmv MOVE_UP    &none         &none                   &mkp MB1  &mkp MB2  &mkp MB3  &msc SCRL_UP  &msc SCRL_DOWN  &none
-&none  &none  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &msc SCRL_UP                    &none  &none  &none    &none     &none           &none
-&none  &none  &none           &none           &none            &msc SCRL_DOWN  &trans  &trans  &trans    &trans    &none     &none         &none           &none
-&none  &none  &none           &mo 6           &trans           &trans                          &none     &none     &none      &none         &none           &none
+&none &none &none &none &none &none                    &kp LG(LS(Z))  &kp LG(V)      &kp LG(C)      &kp LG(X)      &kp LG(Z)      &none
+&none &kp LGUI &kp LALT &kp LCTRL &kp LSHFT &none                    &none          &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_UP   &mmv MOVE_RIGHT &none
+&none &none &none &none &none &none     &trans &trans            &none          &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP   &msc SCRL_RIGHT &none
+&none &none &none &mo 6 &none &none                          &mkp MB2 &mkp MB1 &mkp MB3      &none &none &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
@@ -230,22 +234,24 @@
         Media_layer {
             display-name = "Media";
 
-            // Media control in the Miryoku style: the keys mirror the arrow
-            // positions on Base, and Play/Stop/Mute sit on the right thumb keys.
-            // The left hand stays transparent for typing and modifiers.
-            // Activated by holding Esc on Base (tap stays Esc).
+            // Media in the Miryoku arrangement: prev / volume / next on the
+            // right-hand home row, stop / play-pause / mute on the right
+            // thumbs, output toggle and Bluetooth on the bottom row. The
+            // left home row is plain mods, C and V chain into Fun and Media
+            // while held. RGB omitted - the halves have no RGB feature.
+            // Activated by holding Esc on Base (tap = Esc).
             //
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
-            // |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
-            // |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
-            // |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |  Vol+   |   ...   |
-            // |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |         |         |  Play   |  Stop   |  Mute   |  Prev   |  Vol-   |  Next   |
+            // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
+            // |    .    |   Gui   |   Alt   |   Ctrl  |  Shift  |    .    |         |         |  EP-tog |   Prev  |  Vol-dn |  Vol-up |   Next  |    .    |
+            // |    .    |   RAlt  |   Fun   |  Media  |    .    |    .    |   MUTE  |   MB3   |  Out-tg |   BT0   |   BT1   |   BT2   |   BT3   |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |   Stop  |    PP   |   Mute  |    .    |    .    |    .    |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans     &trans  &trans  &trans  &trans  &trans  &trans  &kp C_VOLUME_UP  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                    &kp C_PLAY_PAUSE  &kp C_STOP  &kp C_MUTE  &kp C_PREV  &kp C_VOLUME_DOWN  &kp C_NEXT
+&none &none &none &none &none &none                    &none &none &none &none &none &none
+&none &kp LGUI &kp LALT &kp LCTRL &kp LSHFT &none                    &ext_power EP_TOG &kp C_PREV &kp C_VOL_DN &kp C_VOL_UP &kp C_NEXT &none
+&none &kp RALT &mo 7 &mo 5 &none &none     &trans &trans            &out OUT_TOG &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &none
+&none &none &none &none &none &none                    &kp C_STOP &kp C_PP &kp C_MUTE &none &none &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
