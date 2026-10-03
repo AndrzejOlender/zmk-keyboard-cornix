@@ -23,9 +23,8 @@
 #define RAISE 3
 #define NAVI   4
 #define MEDIA  5
-#define DEBUG  6
-#define FUN    7
-#define NAV    8
+#define FUN    6
+#define NAV    7
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 15
 
 #include <behaviors.dtsi>
@@ -106,9 +105,9 @@
         //   ...        transparent - falls through to the layer below (&trans)
         //   X/Y        tap X, hold Y
         //              home row mods: G = Gui, A = Alt, C = Ctrl, S = Shift
-        //   NUM SYM DESK MOUSE MEDIA DBG FUN NAV  hold to reach that layer
-        //   BT0 - BT4  select Bluetooth profile       BTclr  clear profile
-        //   DskN       switch to macOS desktop N      BOOT   enter bootloader
+        //   NUM SYM DESK MOUSE MEDIA FUN NAV    hold to reach that layer
+        //   BT0 - BT3  select Bluetooth profile
+        //   DskN       switch to macOS desktop N
         //   MB1 - MB3  mouse buttons     Ms-*  move pointer     Scr-*  scroll
         //
         // The diagrams describe the bindings underneath them - change a binding
@@ -120,20 +119,20 @@
 
             // QWERTY alphas with GACS home row mods - pinky to index, Gui Alt
             // Ctrl Shift, mirrored on both hands. The outer left column is
-            // unused. Left thumbs: Esc/Media, Space/Nav, Tab/Mouse. Right
+            // unused. Left thumbs: Esc/Media, Tab/Mouse, Space/Nav. Right
             // thumbs: Ent/Sym, Bksp/Num, Del/Fun (tap = key, hold = layer).
             //
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             // |    .    |    Q    |    W    |    E    |    R    |    T    |         |         |    Y    |    U    |    I    |    O    |    P    |    .    |
             // |    .    |   A/G   |   S/A   |   D/C   |   F/S   |    G    |         |         |    H    |   J/S   |   K/C   |   L/A   |   '/G   |    .    |
             // |    .    |    Z    |    X    |    C    |    V    |    B    |   MUTE  |   MB3   |    N    |    M    |    ,    |    .    |    UP   |    /    |
-            // |    .    |    .    |    .    |Esc/Media| Spc/Nav |Tab/Mouse|         |         | Ent/Sym | Bksp/Num| Del/Fun |   LEFT  |   DOWN  |   RGHT  |
+            // |    .    |    .    |    .    |Esc/Media|Tab/Mouse| Spc/Nav |         |         | Ent/Sym | Bksp/Num| Del/Fun |   LEFT  |   DOWN  |   RGHT  |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none      &kp Q          &kp W          &kp E          &kp R                  &kp T                            &kp Y      &kp U                &kp I          &kp O          &kp P            &none
 &none      &u_mt LGUI A   &u_mt LALT S   &u_mt LCTRL D  &u_mt LSHFT F          &kp G                            &kp H      &u_mt RSHFT J        &u_mt RCTRL K  &u_mt RALT L   &u_mt RGUI SQT  &none
 &none      &kp Z          &kp X          &kp C          &kp V                  &kp B          &kp C_MUTE  &mkp MB3  &kp N      &kp M                &kp COMMA      &kp DOT        &kp UP           &kp FSLH
-&none      &none          &none          &lt 5 ESCAPE   &tp_lt 8 SPACE              &lt 4 TAB                   &tp_lt 2 ENTER   &tp_lt 1 BACKSPACE  &tp_lt 7 DEL   &kp LEFT       &kp DOWN         &kp RIGHT
+&none      &none          &none          &lt 5 ESCAPE   &lt 4 TAB              &tp_lt 7 SPACE                   &tp_lt 2 ENTER   &tp_lt 1 BACKSPACE  &tp_lt 6 DEL   &kp LEFT       &kp DOWN         &kp RIGHT
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
@@ -196,13 +195,13 @@
             // |    .    |   Dsk1  |   Dsk2  |   Dsk3  |   Dsk4  |    .    |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
             // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
             // |    .    |    .    |    .    |    .    |    .    |    .    |   MUTE  |   MB3   |    .    |    .    |    .    |    .    |    .    |    .    |
-            // |    .    |    .    |    .    |   ESC   |  SPACE  |    .    |         |         |   ENT   |    .    |    .    |    .    |    .    |    .    |
+            // |    .    |    .    |    .    |   ESC   |    .    |  SPACE  |         |         |   ENT   |    .    |    .    |    .    |    .    |    .    |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none  &kp LA(LG(N1))  &kp LA(LG(N2))  &kp LA(LG(N3))  &kp LA(LG(N4))  &none                       &none  &none  &none  &none  &none  &none
 &none  &none           &none           &none           &none           &none                       &none  &none  &none  &none  &none  &none
 &none  &none           &none           &none           &none           &none     &kp C_MUTE  &mkp MB3  &none  &none  &none  &none  &none  &none
-&none  &none           &none           &kp ESCAPE      &kp SPACE           &none                   &kp ENTER  &none  &none  &none  &none  &none
+&none  &none           &none           &kp ESCAPE      &none           &kp SPACE                   &kp ENTER  &none  &none  &none  &none  &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
@@ -214,19 +213,19 @@
             // auto-repeat on the right-hand home row, wheel on the bottom
             // row, buttons on the right thumbs (right, left, middle) and
             // clipboard on the top row. The left home row is plain mods
-            // for mod+click and drag; the outer thumb chains into Desktops
-            // and C chains into Symbols. Activated by holding Tab on Base.
+            // for mod+click and drag; the outer thumb chains into Desktops.
+            // Activated by holding Tab on Base.
             //
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |   RDO   |   PST   |   CPY   |   CUT   |   UND   |    .    |
             // |    .    |   Gui   |   Alt   |   Ctrl  |  Shift  |    .    |         |         |    .    |   Ms-l  |   Ms-d  |   Ms-u  |   Ms-r  |    .    |
-            // |    .    |  RAlt   |   Sym   |    .    |    .    |    .    |   ...   |   ...   |    .    |   Wh-l  |   Wh-d  |   Wh-u  |   Wh-r  |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |    .    |   ...   |   ...   |    .    |   Wh-l  |   Wh-d  |   Wh-u  |   Wh-r  |    .    |
             // |    .    |    .    |    .    |  Desk   |    .    |    .    |         |         | R-click | L-click | M-click |    .    |    .    |    .    |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none &none &none &none &none &none                    &kp LG(LS(Z))  &kp LG(V)      &kp LG(C)      &kp LG(X)      &kp LG(Z)      &none
 &none &kp LGUI &kp LALT &kp LCTRL &kp LSHFT &none                    &none          &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_UP   &mmv MOVE_RIGHT &none
-&none &kp RALT &mo 2 &none &none &none     &trans &trans            &none          &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP   &msc SCRL_RIGHT &none
+&none &none &none &none &none &none     &trans &trans            &none          &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP   &msc SCRL_RIGHT &none
 &none &none &none &mo 3 &none &none                          &mkp MB2 &mkp MB1 &mkp MB3      &none &none &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -235,50 +234,25 @@
         Media_layer {
             display-name = "Media";
 
-            // Media in the Miryoku arrangement: prev / volume / next on the
-            // right-hand home row, stop / play-pause / mute on the right
-            // thumbs, output toggle and Bluetooth on the bottom row. The
-            // left home row is plain mods, C and V chain into Fun and Media
-            // while held. RGB omitted - the halves have no RGB feature.
-            // Activated by holding Esc on Base (tap = Esc).
+            // Media in the Miryoku arrangement: EP toggle, prev / volume /
+            // next on the right-hand home row, output toggle and Bluetooth
+            // profiles on the bottom row, stop / play-pause / mute on the
+            // right thumbs. The left home row is plain mods. RGB omitted -
+            // the halves have no RGB. Activated by holding Esc (tap = Esc).
             //
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
             // |    .    |   Gui   |   Alt   |   Ctrl  |  Shift  |    .    |         |         |  EP-tog |   Prev  |  Vol-dn |  Vol-up |   Next  |    .    |
-            // |    .    |   RAlt  |   Fun   |  Media  |    .    |    .    |   MUTE  |   MB3   |  Out-tg |   BT0   |   BT1   |   BT2   |   BT3   |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |    .    |   MUTE  |   MB3   |  Out-tg |   BT0   |   BT1   |   BT2   |   BT3   |    .    |
             // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |   Stop  |    PP   |   Mute  |    .    |    .    |    .    |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none &none &none &none &none &none                    &none &none &none &none &none &none
 &none &kp LGUI &kp LALT &kp LCTRL &kp LSHFT &none                    &ext_power EP_TOG &kp C_PREV &kp C_VOL_DN &kp C_VOL_UP &kp C_NEXT &none
-&none &kp RALT &mo 7 &mo 5 &none &none     &trans &trans            &out OUT_TOG &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &none
+&none &none &none &none &none &none     &trans &trans            &out OUT_TOG &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &none
 &none &none &none &none &none &none                    &kp C_STOP &kp C_PP &kp C_MUTE &none &none &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
-        };
-
-        Debug_layer {
-            display-name = "Debug";
-
-            // Bluetooth profile management on the top row, and bootloader entry on
-            // both halves - the outer key of each hand's bottom row.
-            //
-            // Currently dormant - no binding activates it. Bluetooth profiles
-            // are also on Symbols (left column) and Media (bottom row); BOOT
-            // via the physical reset button.
-            //
-            // +-------------------------------------------------------------------------------------------------------------------------------------------+
-            // |  BTclr  |   BT0   |   BT1   |   BT2   |   BT3   |   BT4   |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
-            // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
-            // |    .    |    .    |    .    |    .    |    .    |   BOOT  |   ...   |   ...   |   BOOT  |    .    |    .    |    .    |    .    |    .    |
-            // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
-            // +-------------------------------------------------------------------------------------------------------------------------------------------+
-            bindings = <
-&bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4                  &none        &none  &none   &none  &none  &none
-&none       &none         &none         &none         &none         &none                         &none        &none  &none   &none  &none  &none
-&none       &none         &none         &none         &none         &bootloader   &trans  &trans  &bootloader  &none  &none   &none  &none  &none
-&none       &none         &none         &none         &none         &none                         &none        &none  &none  &none  &none  &none
-            >;
         };
 
         Fun_layer {
@@ -293,13 +267,13 @@
             // |    .    |   F12   |    F7   |    F8   |    F9   |  PrtSc  |         |         |    .    |    .    |    .    |    .    |    .    |    .    |
             // |    .    |   F11   |    F4   |    F5   |    F6   |  ScrLk  |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
             // |    .    |   F10   |    F1   |    F2   |    F3   |  Pause  |   MUTE  |   MB3   |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
-            // |    .    |    .    |    .    |   App   |  Space  |   Tab   |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
+            // |    .    |    .    |    .    |   App   |   Tab   |  Space  |         |         |   ...   |   ...   |   ...   |   ...   |   ...   |   ...   |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none  &kp F12  &kp F7   &kp F8   &kp F9   &kp PSCRN                    &none  &none  &none  &none  &none  &none
 &none  &kp F11  &kp F4   &kp F5   &kp F6   &kp SLCK                     &trans &trans &trans &trans &trans &trans
 &none  &kp F10  &kp F1   &kp F2   &kp F3   &kp PAUSE_BREAK  &kp C_MUTE  &mkp MB3  &trans &trans &trans &trans &trans &trans
-&none  &none    &none    &kp K_APP  &kp SPACE  &kp TAB                       &trans &trans &trans &trans &trans &trans
+&none  &none    &none    &kp K_APP  &kp TAB  &kp SPACE                       &trans &trans &trans &trans &trans &trans
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
@@ -312,19 +286,19 @@
             // PgUp / End on the bottom row, clipboard on the top row and
             // Enter / Backspace / Delete on the right thumbs for editing
             // in place. Caps Word on the inner index. The left home row
-            // is plain mods, C chains into Numbers, V re-holds Nav.
+            // is plain mods.
             // Activated by holding Space on Base (tap = Space).
             //
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |   RDO   |   PST   |   CPY   |   CUT   |   UND   |    .    |
             // |    .    |   Gui   |   Alt   |   Ctrl  |  Shift  |    .    |         |         |  CapsWr |    ←    |    ↓    |    ↑    |    →    |    .    |
-            // |    .    |   RAlt  |   Num   |   Nav   |    .    |    .    |   MUTE  |   MB3   |   Ins   |   Home  |   PgDn  |   PgUp  |   End   |    .    |
+            // |    .    |    .    |    .    |    .    |    .    |    .    |   MUTE  |   MB3   |   Ins   |   Home  |   PgDn  |   PgUp  |   End   |    .    |
             // |    .    |    .    |    .    |    .    |    .    |    .    |         |         |   Ent   |   Bksp  |   Del   |    .    |    .    |    .    |
             // +-------------------------------------------------------------------------------------------------------------------------------------------+
             bindings = <
 &none &none &none &none &none &none                    &kp LG(LS(Z))  &kp LG(V)      &kp LG(C)      &kp LG(X)      &kp LG(Z)      &none
 &none &kp LGUI &kp LALT &kp LCTRL &kp LSHFT &none                    &caps_word     &kp LEFT       &kp DOWN       &kp UP         &kp RIGHT      &none
-&none &kp RALT &mo 1 &mo 8 &none &none     &trans &trans            &kp INS        &kp HOME       &kp PG_DN      &kp PG_UP      &kp END        &none
+&none &none &none &none &none &none     &trans &trans            &kp INS        &kp HOME       &kp PG_DN      &kp PG_UP      &kp END        &none
 &none &none &none &none &none &none                          &kp ENTER      &kp BSPC       &kp DEL        &none &none &none
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
